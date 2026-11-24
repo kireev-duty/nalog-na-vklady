@@ -4,108 +4,159 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Налог на вклады 2025–2028</title>
-<meta name="description" content="НДФЛ с процентов по вкладам в нескольких банках: льгота, правила 2025–2026 и новые с 2027 (шкала 13–22% с учётом зарплаты), что удержит банк, что доначислит ФНС, доходность после налога и инфляции.">
+<meta name="description" content="НДФЛ с процентов по вкладам: живые ставки банков и ключевая ЦБ, льгота, правила 2025–2026 и новые с 2027 (шкала 13–22% поверх зарплаты), какой вклад выгоднее после налога, прогноз капитала и новости.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6f5c'/%3E%3Cpath d='M16 46h32M20 40V26m8 14V22m8 18V26m8 14V20' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='46' cy='14' r='6' fill='%23f4c95d'/%3E%3C/svg%3E">
 <style>
 :root{
-  --bg:#f6f7f5;--card:#fff;--text:#1b1f1d;--muted:#5b645f;--line:#dfe3e0;--accent:#1f6f5c;--accent-soft:#e3f1ec;
-  --warn:#9a4d00;--warn-soft:#fff3e0;--bad:#b3261e;--good:#1f6f5c;--input:#fff;--focus:#1f6f5c;
+  --bg:#f4f6f4;--card:#fff;--text:#18201c;--muted:#5a655f;--line:#dde3df;--accent:#1f6f5c;--accent-2:#2f8f76;--accent-soft:#e2f1eb;
+  --gold:#b7791f;--gold-soft:#fdf3e1;--bad:#b3261e;--bad-soft:#fdecea;--good:#1f6f5c;--input:#fff;--focus:#1f6f5c;--shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.04);
   color-scheme:light dark;
 }
 @media (prefers-color-scheme:dark){:root{
-  --bg:#111413;--card:#1a1e1c;--text:#e7ebe9;--muted:#9aa5a0;--line:#2d3431;--accent:#5cc4a6;--accent-soft:#1c3029;
-  --warn:#f0b35c;--warn-soft:#33281a;--bad:#ff8a80;--good:#5cc4a6;--input:#141816;--focus:#5cc4a6;
+  --bg:#0f1311;--card:#171c1a;--text:#e6ebe8;--muted:#98a49e;--line:#2a312e;--accent:#5cc4a6;--accent-2:#7ad3b8;--accent-soft:#18302a;
+  --gold:#f0b35c;--gold-soft:#33281a;--bad:#ff8a80;--bad-soft:#3a1d1b;--good:#5cc4a6;--input:#121614;--focus:#5cc4a6;--shadow:none;
 }}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:860px;margin:0 auto;padding:20px 16px 48px}
-h1{font-size:1.6rem;line-height:1.2;margin:8px 0 6px}
-h2{font-size:1.1rem;margin:0 0 12px}
-p.lead{color:var(--muted);margin:0 0 18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-label{display:block;font-size:.9rem;color:var(--muted);margin-bottom:4px}
-input,select{width:100%;min-height:40px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--input);color:var(--text);font:inherit}
-input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-.hint{font-size:.82rem;color:var(--muted);margin-top:4px}
-.dep{border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:10px;display:grid;grid-template-columns:1.4fr 1fr .7fr .6fr;gap:10px;align-items:end}
-.dep .wide{grid-column:1/-1;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:980px;margin:0 auto;padding:16px 16px 56px}
+header.top{padding:18px 0 8px}
+h1{font-size:clamp(1.5rem,4vw,2.1rem);line-height:1.15;margin:0 0 6px;letter-spacing:-.01em}
+h2{font-size:1.15rem;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+h2 .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:.85rem;font-weight:700;flex:none}
+h3{font-size:1rem;margin:16px 0 8px}
+p.lead{color:var(--muted);margin:0;max-width:720px}
+.live{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.88rem;box-shadow:var(--shadow);white-space:nowrap}
+.chip b{font-variant-numeric:tabular-nums}
+.chip.warn{background:var(--gold-soft);border-color:transparent}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 16px;box-shadow:var(--shadow)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+label{display:block;font-size:.88rem;color:var(--muted);margin-bottom:4px}
+input,select{width:100%;min-height:42px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--input);color:var(--text);font:inherit;font-variant-numeric:tabular-nums}
+input[type=checkbox],input[type=radio]{width:20px;min-height:20px;height:20px;accent-color:var(--accent)}
+input[type=range]{padding:0;min-height:28px;accent-color:var(--accent);border:0;background:none}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.hint{font-size:.8rem;color:var(--muted);margin-top:4px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;border:0;padding:0;margin:0}
+.seg legend{font-size:.88rem;color:var(--muted);margin-bottom:4px;padding:0}
+.seg label{margin:0;display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--text);cursor:pointer;min-height:42px}
+.seg label:has(input:checked){border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
+.dep{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end}
+.dep .c2{grid-column:span 2}.dep .c3{grid-column:span 3}
+.dep .foot{grid-column:1/-1;display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between}
 .dep .chk{display:flex;gap:8px;align-items:center;color:var(--text);font-size:.92rem;margin:0}
-.dep .chk input{width:22px;min-height:22px;height:22px}
-.dep .manual{display:flex;gap:8px;align-items:center;flex:1;min-width:220px}
-.dep .manual input{max-width:180px}
-@media (max-width:640px){.dep{grid-template-columns:1fr 1fr}}
-button{min-height:40px;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;cursor:pointer}
-button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-@media (prefers-color-scheme:dark){button.primary{color:#0d1311}}
-button.del{color:var(--bad)}
+.dep .manual{display:flex;gap:8px;align-items:center}
+.dep .manual input{width:150px}
+.dep .out{font-weight:600;font-variant-numeric:tabular-nums}
+@media (max-width:700px){.dep{grid-template-columns:repeat(2,1fr)}.dep .c3{grid-column:1/-1}.dep .c2{grid-column:span 2}}
+button{min-height:42px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+@media (prefers-color-scheme:dark){button.primary{color:#0c1210}}
+button.ghost{border-color:transparent;background:none;color:var(--bad);padding:8px}
 .row-btns{display:flex;gap:8px;flex-wrap:wrap}
-.total{font-size:2.1rem;font-weight:700;line-height:1.1;margin:4px 0}
+.result{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px}
+@media (max-width:760px){.result{grid-template-columns:1fr}}
+.total{font-size:clamp(2.2rem,7vw,3rem);font-weight:750;line-height:1;margin:6px 0 8px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .sub{color:var(--muted)}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
-td{padding:7px 0;border-bottom:1px solid var(--line);vertical-align:top}
-td:last-child{text-align:right;white-space:nowrap;padding-left:12px}
+td,th{padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+td.r,th.r{text-align:right;white-space:nowrap;padding-left:10px}
 tr.strong td{font-weight:700}
-.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.82rem;background:var(--accent-soft);color:var(--accent)}
-.pill.warn{background:var(--warn-soft);color:var(--warn)}
-.note{background:var(--warn-soft);color:var(--text);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:12px}
-.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
-.cmp div{border:1px solid var(--line);border-radius:10px;padding:10px}
-.cmp b{display:block;font-size:1.3rem}
-details{margin-top:10px}
+th{font-size:.82rem;color:var(--muted);font-weight:600}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.8rem;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.pill.warn{background:var(--gold-soft);color:var(--gold)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.note{background:var(--gold-soft);border-radius:12px;padding:10px 12px;font-size:.9rem;margin-top:12px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp div{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.cmp b{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.offers td{padding:9px 6px 9px 0}
+.offers tr.best td{background:var(--accent-soft)}
+.offers tr.best td:first-child{border-radius:10px 0 0 10px;padding-left:8px}
+.offers tr.best td:last-child{border-radius:0 10px 10px 0;padding-right:8px}
+.bank{font-weight:600}
+.m-only{display:none;font-size:.78rem;color:var(--muted);font-weight:400}
+@media (max-width:600px){.m-hide{display:none}.offers .m-only{display:block}.offers td{font-size:.92rem}}
+.prod{font-size:.85rem;color:var(--muted)}
+a{color:var(--accent)}
+details{margin-top:12px}
 summary{cursor:pointer;font-weight:600}
-footer{color:var(--muted);font-size:.85rem;margin-top:24px}
-footer a{color:var(--accent)}
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-size:12px;font-family:inherit}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;color:var(--muted);margin:6px 0 4px}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.news li{margin:0 0 10px;list-style:none}
+.news{padding:0;margin:0}
+.news .src{font-size:.8rem;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
 .up{color:var(--bad)}.down{color:var(--good)}
+footer{color:var(--muted);font-size:.85rem;margin-top:24px;line-height:1.6}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
 <body>
 <main>
-<h1>Налог на вклады: 2025–2028</h1>
-<p class="lead">Несколько вкладов в разных банках, одна общая льгота. Показывает налог по старым правилам и по новым с 2027 года, когда ставку для процентов определяют с учётом зарплаты. Отдельно: сколько удержит банк, сколько доначислит ФНС и что остаётся после инфляции.</p>
-
-<section class="card" aria-labelledby="h-params">
-  <h2 id="h-params">Год и доходы</h2>
-  <div class="grid">
-    <div><label for="year">За какой год проценты</label>
-      <select id="year"><option>2025</option><option selected>2026</option><option>2027</option><option>2028</option></select>
-      <div class="hint" id="year-hint"></div></div>
-    <div><label for="other">Зарплата и прочие доходы за год, до НДФЛ, ₽</label>
-      <input id="other" inputmode="decimal" value="0">
-      <div class="hint" id="other-hint"></div></div>
-    <div><label for="invest">Другие инвест-доходы за год, ₽</label>
-      <input id="invest" inputmode="decimal" value="0">
-      <div class="hint">Дивиденды, купоны, продажа бумаг — у кого есть</div></div>
-    <div><label for="key">Макс. ключевая ставка для льготы, %</label>
-      <input id="key" inputmode="decimal">
-      <div class="hint" id="key-hint"></div></div>
-    <div><label for="infl">Инфляция за год, %</label>
-      <input id="infl" inputmode="decimal" value="6">
-      <div class="hint">Для реальной доходности. Прогноз ЦБ на конец 2026 — 7,1–7,6%</div></div>
-    <div id="withheld-box"><label for="withheld">Уже удержано банками, ₽</label>
-      <input id="withheld" inputmode="decimal" value="0">
-      <div class="hint">Есть в уведомлении ФНС, графа «налог удержанный»</div></div>
-  </div>
-</section>
+<header class="top">
+  <h1>Налог на вклады: 2025–2028</h1>
+  <p class="lead">Считает НДФЛ с процентов по всем твоим вкладам сразу, показывает старые и новые с 2027 года правила, подсказывает, где после налога выгоднее, и прогнозирует капитал. Ставки банков и ключевая ЦБ обновляются каждый день.</p>
+  <div class="live" id="live" aria-live="polite"><span class="chip">Загружаю свежие данные…</span></div>
+</header>
 
 <section class="card" aria-labelledby="h-deps">
-  <h2 id="h-deps">Вклады и счета</h2>
+  <h2 id="h-deps"><span class="n">1</span>Мои вклады и счета</h2>
   <div id="deps"></div>
   <div class="row-btns">
     <button type="button" class="primary" id="add">+ Добавить вклад</button>
-    <button type="button" id="reset">Сбросить</button>
+    <button type="button" id="reset">Сбросить всё</button>
   </div>
-  <div class="hint" style="margin-top:8px">«Месяцев в этом году» — сколько вклад работал в выбранном году. Знаешь точные проценты (из выписки или уведомления ФНС) — впиши их, они главнее расчёта.</div>
+  <div class="hint" style="margin-top:8px">Выбери банк и продукт — ставка подставится, её можно поправить. «Месяцев в году» — сколько вклад работал в выбранном году. Точные проценты из выписки или уведомления ФНС главнее расчёта.</div>
+</section>
+
+<section class="card" aria-labelledby="h-params">
+  <h2 id="h-params"><span class="n">2</span>Год и доходы</h2>
+  <div class="grid">
+    <fieldset class="seg" id="years"><legend>За какой год проценты</legend></fieldset>
+    <div><label for="other">Зарплата и прочие доходы за год, до НДФЛ, ₽</label>
+      <input id="other" inputmode="decimal" autocomplete="off">
+      <div class="hint" id="other-hint"></div></div>
+  </div>
+  <details>
+    <summary>Ещё параметры</summary>
+    <div class="grid" style="margin-top:10px">
+      <div><label for="invest">Другие инвест-доходы за год, ₽</label>
+        <input id="invest" inputmode="decimal" autocomplete="off">
+        <div class="hint">Дивиденды, купоны, продажа бумаг</div></div>
+      <div><label for="key">Ключевая ставка для льготы, %</label>
+        <input id="key" inputmode="decimal" autocomplete="off">
+        <div class="hint" id="key-hint"></div></div>
+      <div><label for="infl">Инфляция за год, %</label>
+        <input id="infl" inputmode="decimal" autocomplete="off">
+        <div class="hint">Для реальной доходности</div></div>
+      <div id="withheld-box"><label for="withheld">Уже удержано банками, ₽</label>
+        <input id="withheld" inputmode="decimal" autocomplete="off">
+        <div class="hint">Графа «налог удержанный» в уведомлении ФНС</div></div>
+    </div>
+  </details>
 </section>
 
 <section class="card" aria-live="polite" aria-labelledby="h-res">
-  <h2 id="h-res">Итог</h2>
-  <div class="sub" id="res-label">НДФЛ с процентов</div>
-  <div class="total" id="res-tax">0 ₽</div>
-  <div id="res-pills"></div>
-  <table id="res-table"></table>
-  <div id="res-cmp"></div>
-  <div id="res-yield"></div>
+  <h2 id="h-res"><span class="n">3</span>Итог</h2>
+  <div class="result">
+    <div>
+      <div class="sub" id="res-label">НДФЛ с процентов</div>
+      <div class="total" id="res-tax">0 ₽</div>
+      <div id="res-pills"></div>
+      <div id="res-cmp" style="margin-top:14px"></div>
+    </div>
+    <div>
+      <table id="res-table"></table>
+      <div id="res-yield"></div>
+    </div>
+  </div>
   <div class="note" id="res-note"></div>
   <details>
     <summary>Почему так</summary>
@@ -113,19 +164,63 @@ footer a{color:var(--accent)}
   </details>
 </section>
 
+<section class="card" aria-labelledby="h-best">
+  <h2 id="h-best"><span class="n">4</span>Куда положить выгоднее — после налога</h2>
+  <div class="grid">
+    <div><label for="b-amount">Сумма, ₽</label><input id="b-amount" inputmode="decimal" autocomplete="off"></div>
+    <div><label for="b-months">Срок</label>
+      <select id="b-months"><option value="3">3 месяца</option><option value="6">6 месяцев</option><option value="12" selected>1 год</option><option value="24">2 года</option><option value="36">3 года</option></select></div>
+    <div style="display:flex;align-items:end"><label class="chk" style="display:flex;gap:8px;align-items:center;color:var(--text);margin:0 0 10px"><input type="checkbox" id="b-cond"> Показать вклады с условиями</label></div>
+  </div>
+  <p class="hint" id="b-hint"></p>
+  <div class="scroll"><table class="offers" id="b-table"></table></div>
+  <p class="hint">Ставки «до X%» — максимальные по продукту с сайта банка; на твоём сроке и сумме ставка может быть ниже. Налог считается с учётом процентов по твоим вкладам из блока 1 и зарплаты. Сравнение без капитализации.</p>
+</section>
+
+<section class="card" aria-labelledby="h-fc">
+  <h2 id="h-fc"><span class="n">5</span>Прогноз капитала</h2>
+  <div class="grid">
+    <div><label for="f-amount">Сумма сейчас, ₽</label><input id="f-amount" inputmode="decimal" autocomplete="off"></div>
+    <div><label for="f-rate">Ставка, % годовых</label><input id="f-rate" inputmode="decimal" autocomplete="off"></div>
+    <div><label for="f-years">Лет: <b id="f-years-out">5</b></label><input id="f-years" type="range" min="1" max="10" value="5"></div>
+    <div><label for="f-key">Ключевая в будущем, %</label><input id="f-key" inputmode="decimal" autocomplete="off">
+      <div class="hint">Для льготы на годы, когда ставка ещё неизвестна</div></div>
+  </div>
+  <div class="legend"><span><i style="background:var(--muted)"></i>без налога</span><span><i style="background:var(--accent)"></i>после налога</span><span><i style="background:var(--gold)"></i>после налога и инфляции (в сегодняшних деньгах)</span></div>
+  <svg class="chart" id="f-chart" viewBox="0 0 640 260" role="img" aria-label="График капитала по годам"></svg>
+  <div class="scroll"><table id="f-table"></table></div>
+</section>
+
+<section class="card" aria-labelledby="h-news">
+  <h2 id="h-news"><span class="n">6</span>Что изменилось</h2>
+  <div class="two">
+    <div>
+      <h3 style="margin-top:0">Новости о вкладах, ставках и налоге</h3>
+      <ul class="news" id="news"><li class="sub">Нет данных — страница открыта без интернета.</li></ul>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Ключевая ставка ЦБ</h3>
+      <svg class="chart" id="key-chart" viewBox="0 0 480 160" role="img" aria-label="Ключевая ставка за три года"></svg>
+      <h3>Макс. ставка 10 крупнейших банков (ЦБ)</h3>
+      <svg class="chart" id="top-chart" viewBox="0 0 480 160" role="img" aria-label="Максимальная ставка по вкладам топ-10 банков"></svg>
+      <p class="hint" id="data-status"></p>
+    </div>
+  </div>
+</section>
+
 <footer>
-  Правила: ст. 214.2, п. 1 и 1.1 ст. 224 НК РФ; с 2027 — законопроект № 617-9, принят Госдумой 24.11.2026, на дату сверки не подписан.
-  Ключевые ставки — <a href="https://www.cbr.ru/hd_base/ProcStav/IR_CHG_MPO/full/">cbr.ru</a>. Сверено 24.11.2026.
-  Это ориентир, а не налоговая консультация: точную сумму пришлёт ФНС.
+  Правила: ст. 214.2, п. 1 и 1.1 ст. 224 НК РФ; с 2027 — законопроект № 617-9 (принят Госдумой 24.11.2026). Данные: ключевая ставка и максимальная ставка топ-10 — <a href="https://www.cbr.ru/hd_base/KeyRate/">Банк России</a>; ставки — с сайтов банков раз в день; новости — ЦБ, Банки.ру, РИА, ТАСС.
+  Это ориентир, а не налоговая консультация и не рекомендация, куда вкладывать: точный налог пришлёт ФНС, точные условия — на сайте банка.
+  <a href="https://github.com/kireev-duty/nalog-na-vklady">Исходный код</a>.
 </footer>
 </main>
 
 <script id="core">
 // Pure calculation core: no DOM. Rules with sources.
 const RULES = {
-  // Max key rate on the 1st of each month of the year (cbr.ru, history of changes).
+  // Max key rate on the 1st of each month of the year (cbr.ru). Updated from data/live.json when online.
   KEY_MAX: { 2023: 0.15, 2024: 0.21, 2025: 0.21, 2026: 0.16 },
-  KEY_NOW: 0.14,            // 23.10.2026 decision, used as a guess for years not over yet
+  KEY_NOW: 0.14,            // fallback guess for years not known yet
   LIMIT_BASE: 1000000,      // п. 1 ст. 214.2 НК: 1 млн × max key rate
   NEW_FROM: 2027,           // bill 617-9: from 2027 the threshold uses the PREVIOUS year's rate,
                             // interest rate step depends on all other income (new abz. 7 p. 1 st. 225)
@@ -143,7 +238,12 @@ function num(x) {
 }
 const r2 = x => Math.round(x * 100) / 100;
 const rub = x => Math.floor(x + 0.5); // п. 6 ст. 52 НК: < 50 коп. drop, ≥ 50 коп. round up
+const blank = v => v === undefined || v === null || String(v).trim() === "";
 
+// byYear: {year: {rate: percent}} from the data updater
+function applyKeyMax(byYear) {
+  for (const [y, v] of Object.entries(byYear || {})) if (+y >= 2023 && v && v.rate > 0) RULES.KEY_MAX[+y] = v.rate / 100;
+}
 function keyRateYear(year) { return year >= RULES.NEW_FROM ? year - 1 : year; }
 function defaultKeyRate(year) {
   const y = keyRateYear(year);
@@ -171,7 +271,7 @@ function slices(start, amount, scale) {
 }
 
 function depositInterest(d) {
-  if (d.manual !== undefined && d.manual !== null && String(d.manual).trim() !== "") return num(d.manual);
+  if (!blank(d.manual)) return num(d.manual);
   const P = num(d.sum), r = num(d.rate) / 100, m = Math.max(0, Math.min(12, num(d.months)));
   return d.cap ? P * (Math.pow(1 + r / 12, m) - 1) : P * r * m / 12;
 }
@@ -181,12 +281,10 @@ function calc(input) {
   const other = Math.max(0, num(input.other));
   const invest = Math.max(0, num(input.invest));
   const def = defaultKeyRate(year);
-  const keyRate = input.keyRate === undefined || input.keyRate === null || String(input.keyRate).trim() === ""
-    ? def.rate : num(input.keyRate) / 100;
+  const keyRate = blank(input.keyRate) ? def.rate : num(input.keyRate) / 100;
   const items = (input.deposits || []).map(d => ({
     name: d.name || "", principal: Math.max(0, num(d.sum)), months: Math.max(0, Math.min(12, num(d.months))),
-    manual: d.manual !== undefined && d.manual !== null && String(d.manual).trim() !== "",
-    interest: r2(Math.max(0, depositInterest(d))),
+    manual: !blank(d.manual), interest: r2(Math.max(0, depositInterest(d))),
   }));
   const interest = r2(items.reduce((s, i) => s + i.interest, 0));
   const free = r2(RULES.LIMIT_BASE * keyRate);
@@ -204,7 +302,6 @@ function calc(input) {
   const bank = isNew ? rub(base * RULES.BANK_RATE) : Math.max(0, num(input.withheld));
   const fnsExtra = Math.max(0, tax - bank);
 
-  // how much more taxable interest fits before the next step
   const scale = isNew ? RULES.SCALE : RULES.OLD;
   const start = isNew ? below + base : invest + base;
   let room = null, nowRate = null, nextRate = null;
@@ -217,7 +314,6 @@ function calc(input) {
   }
   const freeLeft = r2(Math.max(0, free - interest));
 
-  // yield on deposits with known principal
   const known = items.filter(i => !i.manual && i.principal > 0 && i.months > 0);
   const capYears = known.reduce((s, i) => s + i.principal * i.months / 12, 0);
   const knownInt = known.reduce((s, i) => s + i.interest, 0);
@@ -230,11 +326,50 @@ function calc(input) {
   }
 
   return {
-    year, isNew, items, interest, keyRate, keyRateOf: def.of, keyKnown: def.known && (input.keyRate == null || String(input.keyRate).trim() === "" || num(input.keyRate) / 100 === def.rate),
+    year, isNew, items, interest, keyRate, keyRateOf: def.of,
+    keyKnown: def.known && (blank(input.keyRate) || num(input.keyRate) / 100 === def.rate),
     free, freeLeft, base, tax, steps, bank, fnsExtra,
     oldTax: rub(oldRaw), newTax: rub(newRaw), effRate: base > 0 ? tax / base : 0,
     room, nowRate, nextRate, yld, payBy: `01.12.${year + 1}`,
   };
+}
+
+// Compare bank offers for one amount and term: extra tax is counted on top of the interest you already have.
+function compareOffers(offers, o) {
+  const amount = Math.max(0, num(o.amount)), months = Math.max(1, num(o.months) || 12);
+  const days = months * 30.4, infl = num(o.inflation) / 100;
+  const base = { year: o.year, other: o.other, invest: o.invest, keyRate: o.keyRate };
+  const t0 = calc({ ...base, deposits: [{ manual: num(o.baseInterest) }] }).tax;
+  const out = [];
+  for (const x of offers || []) {
+    if (x.cond && !o.includeCond) continue;
+    if (x.minSum && amount < x.minSum) continue;
+    if (x.termDays && (days < x.termDays.from - 5 || days > x.termDays.to + 5)) continue;
+    const interest = r2(amount * x.rate / 100 * months / 12);
+    const tax = calc({ ...base, deposits: [{ manual: num(o.baseInterest) + interest }] }).tax - t0;
+    const net = interest - tax;
+    const netYield = amount > 0 ? net / amount * 12 / months : 0;
+    out.push({ ...x, interest, tax, net, netYield, real: (1 + netYield) / (1 + infl) - 1 });
+  }
+  return out.sort((a, b) => b.net - a.net || b.rate - a.rate);
+}
+
+// Capital forecast with interest reinvested once a year and taxed by the rules of each year.
+function forecast(o) {
+  const years = Math.max(1, Math.min(30, Math.round(num(o.years) || 1)));
+  const rate = num(o.rate) / 100, infl = num(o.inflation) / 100, y0 = Math.round(num(o.year0)) || 2026;
+  let cap = Math.max(0, num(o.amount)), noTax = cap;
+  const rows = [];
+  for (let i = 0; i < years; i++) {
+    const year = y0 + i;
+    const interest = r2(cap * rate);
+    const keyRate = defaultKeyRate(year).known ? undefined : o.futureKey;
+    const tax = calc({ year, other: o.other, invest: o.invest, keyRate, deposits: [{ manual: interest }] }).tax;
+    cap = r2(cap + interest - tax);
+    noTax = r2(noTax * (1 + rate));
+    rows.push({ year, interest, tax, capital: cap, noTax, real: r2(cap / Math.pow(1 + infl, i + 1)) });
+  }
+  return rows;
 }
 </script>
 
@@ -243,38 +378,76 @@ const $ = id => document.getElementById(id);
 const fmt = (x, d = 0) => (Math.round(x * 10 ** d) / 10 ** d).toLocaleString("ru-RU", { minimumFractionDigits: d, maximumFractionDigits: d });
 const rubs = x => fmt(x) + " ₽";
 const pct = (x, d = 1) => fmt(x * 100, d) + "%";
-const KEY = "nalog-na-vklady-v1";
-const DEFAULT = { year: "2026", other: "0", invest: "0", key: "", infl: "6", withheld: "0",
-  deposits: [{ name: "Вклад 1", sum: "1 000 000", rate: "14", months: "12", cap: true, manual: "" }] };
-
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const safeUrl = u => /^https?:\/\//.test(String(u || "")) ? esc(u) : "#";
+const ruDate = iso => iso ? iso.slice(0, 10).split("-").reverse().join(".") : "";
+const KEY = "nalog-na-vklady-v2";
+const YEARS = [2025, 2026, 2027, 2028];
+const DEFAULT = {
+  year: "2026", other: "", invest: "", key: "", infl: "6", withheld: "",
+  deposits: [{ bank: "", product: "", name: "", sum: "1 000 000", rate: "14", months: "12", cap: true, manual: "" }],
+  bAmount: "", bMonths: "12", bCond: false, fAmount: "", fRate: "", fYears: "5", fKey: "",
+};
+let LIVE = null, OFFERS = [];
 let state = load();
 
 function load() {
-  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.deposits)) return s; } catch (e) {}
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && Array.isArray(s.deposits)) return { ...structuredClone(DEFAULT), ...s };
+    const v1 = JSON.parse(localStorage.getItem("nalog-na-vklady-v1"));
+    if (v1 && Array.isArray(v1.deposits)) return { ...structuredClone(DEFAULT), ...v1, deposits: v1.deposits.map(d => ({ bank: "", product: "", ...d })) };
+  } catch (e) {}
   return structuredClone(DEFAULT);
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
 
+// ---------- deposits
+function bankOptions(sel) {
+  const banks = (LIVE?.banks || []).filter(b => b.offers?.length);
+  return `<option value="">Другой банк</option>` + banks.map(b => `<option value="${esc(b.id)}"${b.id === sel ? " selected" : ""}>${esc(b.name)}</option>`).join("");
+}
+function productOptions(bankId, sel) {
+  const b = (LIVE?.banks || []).find(x => x.id === bankId);
+  if (!b) return `<option value="">—</option>`;
+  return `<option value="">Выбери продукт</option>` + b.offers.map((o, i) =>
+    `<option value="${i}"${String(i) === String(sel) ? " selected" : ""}>${esc(o.name)} — до ${fmt(o.rate, 2)}%${o.cond ? " (с условиями)" : ""}</option>`).join("");
+}
 function depRow(d, i) {
   const el = document.createElement("div");
   el.className = "dep";
   el.innerHTML = `
-    <div><label for="n${i}">Банк / вклад</label><input id="n${i}" data-k="name"></div>
-    <div><label for="s${i}">Сумма, ₽</label><input id="s${i}" data-k="sum" inputmode="decimal"></div>
-    <div><label for="r${i}">Ставка, %</label><input id="r${i}" data-k="rate" inputmode="decimal"></div>
-    <div><label for="m${i}">Месяцев в этом году</label><input id="m${i}" data-k="months" inputmode="numeric"></div>
-    <div class="wide">
+    <div class="c3"><label for="bk${i}">Банк</label><select id="bk${i}" data-k="bank">${bankOptions(d.bank)}</select></div>
+    <div class="c3"><label for="pr${i}">Продукт</label><select id="pr${i}" data-k="product">${productOptions(d.bank, d.product)}</select></div>
+    <div class="c2"><label for="s${i}">Сумма, ₽</label><input id="s${i}" data-k="sum" inputmode="decimal" autocomplete="off"></div>
+    <div><label for="r${i}">Ставка, %</label><input id="r${i}" data-k="rate" inputmode="decimal" autocomplete="off"></div>
+    <div><label for="m${i}">Месяцев в году</label><input id="m${i}" data-k="months" inputmode="numeric" autocomplete="off"></div>
+    <div class="c2"><label for="p${i}">Проценты точно, ₽</label><input id="p${i}" data-k="manual" inputmode="decimal" placeholder="если знаешь" autocomplete="off"></div>
+    <div class="foot">
       <label class="chk"><input type="checkbox" data-k="cap"> Капитализация ежемесячно</label>
-      <span class="manual"><label for="p${i}" style="margin:0">Проценты точно, ₽</label><input id="p${i}" data-k="manual" inputmode="decimal" placeholder="если знаешь"></span>
-      <span class="sub" data-out="int"></span>
-      <button type="button" class="del" aria-label="Удалить вклад">Удалить</button>
+      <span><span class="sub">проценты:</span> <span class="out" data-out="int"></span></span>
+      <span class="sub" data-out="cond"></span>
+      <button type="button" class="ghost" aria-label="Удалить вклад ${i + 1}">Удалить</button>
     </div>`;
-  el.querySelectorAll("[data-k]").forEach(inp => {
+  el.querySelectorAll("input[data-k]").forEach(inp => {
     const k = inp.dataset.k;
     if (inp.type === "checkbox") inp.checked = !!d[k]; else inp.value = d[k] ?? "";
     inp.addEventListener("input", () => { d[k] = inp.type === "checkbox" ? inp.checked : inp.value; update(); });
   });
-  el.querySelector(".del").addEventListener("click", () => { state.deposits.splice(i, 1); renderDeps(); update(); });
+  el.querySelector('[data-k="bank"]').addEventListener("change", e => { d.bank = e.target.value; d.product = ""; renderDeps(); update(); });
+  el.querySelector('[data-k="product"]').addEventListener("change", e => {
+    d.product = e.target.value;
+    const o = (LIVE?.banks || []).find(x => x.id === d.bank)?.offers?.[+d.product];
+    if (o) {
+      d.rate = String(o.rate).replace(".", ",");
+      if (o.kind === "savings") d.cap = true;
+      d.name = o.name;
+      el.querySelector('[data-k="rate"]').value = d.rate;
+      el.querySelector('[data-k="cap"]').checked = d.cap;
+    }
+    update();
+  });
+  el.querySelector(".ghost").addEventListener("click", () => { state.deposits.splice(i, 1); renderDeps(); update(); });
   return el;
 }
 function renderDeps() {
@@ -282,101 +455,228 @@ function renderDeps() {
   state.deposits.forEach((d, i) => box.appendChild(depRow(d, i)));
 }
 
+// ---------- params
+function renderYears() {
+  $("years").innerHTML = `<legend>За какой год проценты</legend>` + YEARS.map(y =>
+    `<label><input type="radio" name="year" value="${y}"${String(y) === String(state.year) ? " checked" : ""}>${y}${y >= 2027 ? " · новые" : ""}</label>`).join("");
+  $("years").querySelectorAll("input").forEach(r => r.addEventListener("change", () => { state.year = r.value; update(); }));
+}
+const FIELDS = [["other", "other"], ["invest", "invest"], ["key", "key"], ["infl", "infl"], ["withheld", "withheld"],
+  ["b-amount", "bAmount"], ["b-months", "bMonths"], ["f-amount", "fAmount"], ["f-rate", "fRate"], ["f-years", "fYears"], ["f-key", "fKey"]];
 function bindParams() {
-  for (const [id, k] of [["year", "year"], ["other", "other"], ["invest", "invest"], ["key", "key"], ["infl", "infl"], ["withheld", "withheld"]]) {
+  for (const [id, k] of FIELDS) {
     $(id).value = state[k] ?? "";
     $(id).addEventListener("input", () => { state[k] = $(id).value; update(); });
   }
+  $("b-cond").checked = !!state.bCond;
+  $("b-cond").addEventListener("change", () => { state.bCond = $("b-cond").checked; update(); });
 }
 
+// ---------- main update
 function update() {
   save();
-  const r = calc({ year: state.year, other: state.other, invest: state.invest, keyRate: state.key,
-    inflation: state.infl, withheld: state.withheld, deposits: state.deposits });
+  const input = { year: state.year, other: state.other, invest: state.invest, keyRate: state.key,
+    inflation: state.infl, withheld: state.withheld, deposits: state.deposits };
+  const r = calc(input);
   const def = defaultKeyRate(r.year);
 
-  $("year-hint").textContent = r.isNew
-    ? "Новые правила: ставка для процентов зависит от всех доходов за год"
-    : "Старые правила: проценты — отдельная база 13/15%, зарплата не влияет";
-  $("other-hint").textContent = r.isNew ? "Нужна: проценты ложатся на шкалу поверх неё" : "В этом году на налог с процентов не влияет";
+  $("other").placeholder = "0";
+  $("other-hint").textContent = r.isNew ? "Нужна: проценты ложатся на шкалу поверх неё. Налог с зарплаты не меняется" : "В 2025–2026 на налог с процентов не влияет";
   $("key").placeholder = fmt(def.rate * 100, 2).replace(/,00$/, "");
+  const km = LIVE?.key?.maxByYear?.[def.of];
   $("key-hint").textContent = def.known
-    ? `Макс. ставка ${def.of} года — ${pct(def.rate, 1)}${r.isNew ? " (с 2027 берут прошлый год)" : ""}. Пусто — подставлю её`
-    : `Ставка ${def.of} года ещё не известна — подставил текущую ${pct(def.rate, 0)}. Поправь, когда год закончится`;
+    ? `Макс. на 1-е число месяцев ${def.of} года — ${pct(def.rate, 1)}${km && !km.final ? ` (пока за ${km.months} мес.)` : ""}${r.isNew ? "; с 2027 берут прошлый год" : ""}`
+    : `Ставка ${def.of} года ещё неизвестна — подставил ${pct(def.rate, 0)}. Поправь, если ждёшь другую`;
   $("withheld-box").hidden = r.isNew;
 
   document.querySelectorAll(".dep").forEach((el, i) => {
-    const it = r.items[i];
-    el.querySelector('[data-out="int"]').textContent = it ? `проценты: ${rubs(it.interest)}` : "";
+    const it = r.items[i], d = state.deposits[i];
+    el.querySelector('[data-out="int"]').textContent = it ? rubs(it.interest) : "";
+    const o = (LIVE?.banks || []).find(x => x.id === d?.bank)?.offers?.[+d?.product];
+    el.querySelector('[data-out="cond"]').textContent = o?.cond ? "ставка с условиями — проверь на сайте банка" : "";
   });
 
   $("res-label").textContent = `НДФЛ с процентов за ${r.year} год`;
   $("res-tax").textContent = rubs(r.tax);
-  const pills = [];
-  if (r.base === 0) pills.push(`<span class="pill">в пределах льготы — налога нет</span>`);
-  else pills.push(`<span class="pill${r.effRate > 0.13 ? " warn" : ""}">ставка ${pct(r.effRate, 2)} с облагаемой части</span>`);
-  $("res-pills").innerHTML = pills.join(" ");
+  $("res-pills").innerHTML = r.base === 0
+    ? `<span class="pill">в пределах льготы — налога нет</span>`
+    : `<span class="pill${r.effRate > 0.13 ? " warn" : ""}">ставка ${pct(r.effRate, 2)} с облагаемой части</span>`;
 
-  const rows = [];
-  rows.push(["Проценты за год, всего", rubs(r.interest)]);
-  rows.push([`Льгота: 1 млн × ${pct(r.keyRate, 2)}`, "− " + rubs(r.free)]);
-  rows.push(["Облагается", rubs(r.base)]);
+  const rows = [["Проценты за год, всего", rubs(r.interest)], [`Льгота: 1 млн × ${pct(r.keyRate, 2)}`, "− " + rubs(r.free)], ["Облагается", rubs(r.base), 1]];
   for (const s of r.steps) rows.push([`&nbsp;&nbsp;из них по ${pct(s.rate, 0)}`, rubs(s.amount)]);
   if (r.isNew) {
-    rows.push(["Удержат банки (13%)", rubs(r.bank)]);
-    rows.push([`Доначислит ФНС, заплатить до ${r.payBy}`, rubs(r.fnsExtra)]);
+    rows.push(["Удержат банки (13%)", rubs(r.bank)], [`Доначислит ФНС, до ${r.payBy}`, rubs(r.fnsExtra)]);
   } else {
     if (r.bank > 0) rows.push(["Уже удержано", "− " + rubs(r.bank)]);
-    rows.push([`К уплате по уведомлению до ${r.payBy}`, rubs(Math.max(0, r.tax - r.bank))]);
+    rows.push([`К уплате по уведомлению до ${r.payBy}`, rubs(Math.max(0, r.tax - r.bank)), 1]);
   }
   rows.push(["Проценты после налога", rubs(r.interest - r.tax)]);
-  $("res-table").innerHTML = rows.map((x, i) => `<tr${i === 2 ? ' class="strong"' : ""}><td>${x[0]}</td><td>${x[1]}</td></tr>`).join("");
+  $("res-table").innerHTML = rows.map(x => `<tr${x[2] ? ' class="strong"' : ""}><td>${x[0]}</td><td class="r">${x[1]}</td></tr>`).join("");
 
   const d = r.newTax - r.oldTax;
   $("res-cmp").innerHTML = r.base > 0 ? `
-    <h2 style="margin-top:16px">Старые правила против новых (та же льгота)</h2>
     <div class="cmp">
       <div><span class="sub">2025–2026: отдельно от зарплаты</span><b>${rubs(r.oldTax)}</b></div>
       <div><span class="sub">с 2027: поверх зарплаты</span><b>${rubs(r.newTax)}</b></div>
     </div>
-    <p class="sub">${d === 0 ? "Разницы нет: всё укладывается в 13%." :
-      `Новые правила дороже на <b class="up">${rubs(d)}</b> в год — это налог с процентов, налог с зарплаты не меняется.`}</p>` : "";
+    <p class="sub" style="margin:8px 0 0">${d === 0 ? "Разницы нет: всё укладывается в 13%." :
+      `Новые правила дороже на <b class="up">${rubs(d)}</b> в год — только налог с процентов, налог с зарплаты не меняется.`}</p>` : "";
 
-  let extra = "";
-  if (r.base === 0 && r.interest > 0) extra = `До конца льготы ещё ${rubs(r.freeLeft)} процентов без налога.`;
-  if (r.room !== null && r.base > 0) extra = `До ставки ${pct(r.nextRate, 0)} ещё ${rubs(r.room)} облагаемых процентов${r.isNew ? " (вместе с зарплатой)" : ""}.`;
   if (r.yld) {
-    const real = r.yld.real;
-    $("res-yield").innerHTML = `<table>
-      <tr><td>Доходность до налога, годовых</td><td>${pct(r.yld.gross, 2)}</td></tr>
-      <tr><td>После налога</td><td>${pct(r.yld.net, 2)}</td></tr>
-      <tr class="strong"><td>После налога и инфляции ${pct(r.yld.inflation, 1)}</td><td class="${real < 0 ? "up" : "down"}">${pct(real, 2)}</td></tr>
+    $("res-yield").innerHTML = `<table style="margin-top:10px">
+      <tr><td>Доходность до налога</td><td class="r">${pct(r.yld.gross, 2)}</td></tr>
+      <tr><td>После налога</td><td class="r">${pct(r.yld.net, 2)}</td></tr>
+      <tr class="strong"><td>После налога и инфляции ${pct(r.yld.inflation, 1)}</td><td class="r ${r.yld.real < 0 ? "up" : "down"}">${pct(r.yld.real, 2)}</td></tr>
     </table>`;
   } else $("res-yield").innerHTML = "";
-  $("res-note").innerHTML = (extra ? extra + "<br>" : "") + (r.isNew
-    ? "С 2027 правила по законопроекту № 617-9 (Госдума приняла 24.11.2026, не подписан). Как банки поделят льготу между собой, закон не раскрывает — здесь банки удерживают 13% со всей облагаемой части, точную сумму сведёт ФНС."
+
+  let extra = "";
+  if (r.base === 0 && r.interest > 0) extra = `До конца льготы ещё ${rubs(r.freeLeft)} процентов без налога. `;
+  if (r.room !== null && r.base > 0) extra = `До ставки ${pct(r.nextRate, 0)} ещё ${rubs(r.room)} облагаемых процентов${r.isNew ? " (вместе с зарплатой)" : ""}. `;
+  $("res-note").innerHTML = extra + (r.isNew
+    ? "Правила с 2027 — по законопроекту № 617-9. Как банки поделят льготу между собой, закон не раскрывает: здесь банки удерживают 13% со всей облагаемой части, точную сумму сведёт ФНС."
     : "Налог с процентов банки сами не удерживают: ФНС соберёт данные из всех банков и пришлёт уведомление.")
     + (r.keyKnown ? "" : " Ставка для льготы — оценка.");
 
   $("why").innerHTML = `
     <p><b>Льгота.</b> Не облагается сумма процентов, равная 1 млн ₽ × максимальная ключевая ставка ЦБ на 1-е число месяцев года (ст. 214.2 НК). Это не лимит вклада: держать можно сколько угодно, налог только с процентов сверх льготы. Льгота одна на все банки.</p>
     <p><b>2025–2026.</b> Проценты вместе с дивидендами и доходами от бумаг — отдельная база: 13% до 2,4 млн, 15% сверху (п. 1.1 ст. 224). Зарплата не влияет.</p>
-    <p><b>С 2027.</b> Льготу считают по ставке прошлого года. Проценты остаются отдельной базой, но ставку для них берут по общей шкале 13/15/18/20/22% с учётом всех остальных доходов: зарплата «внизу», проценты «сверху». Поэтому налог с зарплаты не меняется, а проценты, которые вместе с ней выходят за 2,4 млн, идут по 15%. Банки удерживают 13%, разницу ФНС доначислит в следующем году.</p>
+    <p><b>С 2027.</b> Льготу считают по ставке прошлого года. Проценты остаются отдельной базой, но ставку для них берут по общей шкале 13/15/18/20/22% с учётом остальных доходов: зарплата «внизу», проценты «сверху». Налог с зарплаты не меняется, а проценты, которые вместе с ней выходят за 2,4 млн, идут по 15%. Банки удерживают 13%, разницу ФНС доначислит в следующем году.</p>
     <p><b>Не учтено:</b> перенос неиспользованной льготы по вкладам дольше 15 месяцев, валютные и иностранные вклады, счета со ставкой до 1%, нерезиденты.</p>`;
+
+  renderBest(r);
+  renderForecast(r);
+}
+
+function renderBest(r) {
+  const amount = blank(state.bAmount) ? Math.max(100000, r.items.reduce((s, i) => s + i.principal, 0)) : num(state.bAmount);
+  $("b-amount").placeholder = fmt(amount);
+  if (!OFFERS.length) { $("b-table").innerHTML = ""; $("b-hint").textContent = "Ставки банков подгружаются из интернета — сейчас их нет."; return; }
+  const list = compareOffers(OFFERS, { amount, months: state.bMonths, year: state.year, other: state.other, invest: state.invest,
+    keyRate: state.key, inflation: state.infl, baseInterest: r.interest, includeCond: state.bCond });
+  $("b-hint").textContent = list.length
+    ? `Для ${rubs(amount)} на ${$("b-months").selectedOptions[0].text}: ${list.length} предложений подходят по сумме и сроку.`
+    : "Под эту сумму и срок предложений нет — попробуй другой срок или включи вклады с условиями.";
+  $("b-table").innerHTML = list.length ? `<thead><tr><th>Банк и продукт</th><th class="r">Ставка</th><th class="r m-hide">Доход</th><th class="r m-hide">Налог</th><th class="r">На руки</th><th class="r m-hide">Реально</th></tr></thead><tbody>` +
+    list.slice(0, 12).map((o, i) => `<tr${i === 0 ? ' class="best"' : ""}>
+      <td><a class="bank" href="${safeUrl(o.url)}" target="_blank" rel="noopener">${esc(o.bank)}</a>${o.ok === false ? ' <span class="pill warn">на ' + esc(ruDate(o.updated)) + "</span>" : ""}<div class="prod">${esc(o.name)}${o.kind === "savings" ? " · накопительный счёт" : ""}${o.cond ? ' · <span class="pill warn">с условиями</span>' : ""}</div></td>
+      <td class="r">до ${fmt(o.rate, 2)}%</td><td class="r m-hide">${rubs(o.interest)}</td><td class="r m-hide">${o.tax ? rubs(o.tax) : "0 ₽"}</td>
+      <td class="r"><b>${rubs(o.net)}</b><span class="m-only">налог ${rubs(o.tax)}<br>реально ${pct(o.real, 1)}</span></td><td class="r m-hide ${o.real < 0 ? "up" : "down"}">${pct(o.real, 1)}</td></tr>`).join("") + "</tbody>" : "";
+}
+
+function renderForecast(r) {
+  const amount = blank(state.fAmount) ? Math.max(100000, r.items.reduce((s, i) => s + i.principal, 0)) : num(state.fAmount);
+  const wRate = r.items.length ? state.deposits.reduce((s, d, i) => s + num(d.rate) * (r.items[i]?.principal || 0), 0) / Math.max(1, r.items.reduce((s, i) => s + i.principal, 0)) : 0;
+  const rate = blank(state.fRate) ? (wRate || 12) : num(state.fRate);
+  const futureKey = blank(state.fKey) ? (LIVE?.key?.current?.rate ?? RULES.KEY_NOW * 100) : num(state.fKey);
+  $("f-amount").placeholder = fmt(amount); $("f-rate").placeholder = fmt(rate, 2); $("f-key").placeholder = fmt(futureKey, 2);
+  $("f-years-out").textContent = state.fYears || 5;
+  const rows = forecast({ amount, rate, years: state.fYears, year0: Math.max(2026, +state.year), other: state.other, invest: state.invest, inflation: state.infl, futureKey });
+  drawLines($("f-chart"), rows.map(x => x.year), [
+    { v: [amount, ...rows.map(x => x.noTax)], color: "var(--muted)", dash: "5 4" },
+    { v: [amount, ...rows.map(x => x.capital)], color: "var(--accent)" },
+    { v: [amount, ...rows.map(x => x.real)], color: "var(--gold)" },
+  ], { money: true, first: "сейчас" });
+  const tax = rows.reduce((s, x) => s + x.tax, 0), last = rows.at(-1);
+  $("f-table").innerHTML = `<thead><tr><th>Год</th><th class="r m-hide">Проценты</th><th class="r">Налог</th><th class="r">Капитал</th><th class="r">В сегодняшних ₽</th></tr></thead><tbody>` +
+    rows.map(x => `<tr><td>${x.year}</td><td class="r m-hide">${rubs(x.interest)}</td><td class="r">${rubs(x.tax)}</td><td class="r">${rubs(x.capital)}</td><td class="r">${rubs(x.real)}</td></tr>`).join("") +
+    `<tr class="strong"><td>Итого</td><td class="r m-hide"></td><td class="r">${rubs(tax)}</td><td class="r">${rubs(last.capital)}</td><td class="r ${last.real < amount ? "up" : "down"}">${rubs(last.real)}</td></tr></tbody>`;
+}
+
+// ---------- charts (inline SVG, no libraries)
+function drawLines(svg, labels, series, opt = {}) {
+  const W = +svg.viewBox.baseVal.width, H = +svg.viewBox.baseVal.height;
+  const padL = opt.money ? 62 : 46, padR = 22, padT = 10, padB = 22;
+  const all = series.flatMap(s => s.v).filter(v => isFinite(v));
+  if (!all.length) { svg.innerHTML = ""; return; }
+  let lo = Math.min(...all), hi = Math.max(...all);
+  if (hi - lo < 1e-9) { hi += 1; lo -= 1; }
+  const pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+  const n = Math.max(...series.map(s => s.v.length));
+  const x = i => padL + (W - padL - padR) * (n === 1 ? 0.5 : i / (n - 1));
+  const y = v => padT + (H - padT - padB) * (1 - (v - lo) / (hi - lo));
+  const lab = v => opt.money ? (Math.abs(v) >= 1e6 ? fmt(v / 1e6, 1) + " млн" : fmt(v / 1e3, 0) + " тыс") : fmt(v, 1) + "%";
+  let g = "";
+  for (let k = 0; k <= 3; k++) {
+    const v = lo + (hi - lo) * k / 3, yy = y(v);
+    g += `<line x1="${padL}" x2="${W - padR}" y1="${yy}" y2="${yy}" stroke="var(--line)"/><text x="${padL - 6}" y="${yy + 4}" text-anchor="end">${lab(v)}</text>`;
+  }
+  const xl = opt.first ? [opt.first, ...labels] : labels;
+  const stepL = Math.ceil(xl.length / (opt.money ? 8 : 4));
+  xl.forEach((l, i) => { if (i % stepL === 0 || i === xl.length - 1) g += `<text x="${x(i)}" y="${H - 5}" text-anchor="middle">${esc(l)}</text>`; });
+  for (const s of series) {
+    const pts = s.v.map((v, i) => (s.step && i ? `${x(i).toFixed(1)},${y(s.v[i - 1]).toFixed(1)} ` : "") + `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+    g += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"${s.dash ? ` stroke-dasharray="${s.dash}"` : ""}/>`;
+  }
+  svg.innerHTML = g;
+}
+
+// ---------- live data
+function renderLive() {
+  const L = LIVE;
+  if (!L) {
+    $("live").innerHTML = `<span class="chip warn">Офлайн: ставки банков и новости недоступны, налог считается по встроенным правилам</span>`;
+    $("data-status").textContent = "";
+    return;
+  }
+  const chips = [];
+  if (L.key?.current) chips.push(`<span class="chip">Ключевая ставка <b>${fmt(L.key.current.rate, 2)}%</b></span>`);
+  if (L.key?.nextMeeting) chips.push(`<span class="chip">Заседание ЦБ <b>${ruDate(L.key.nextMeeting)}</b></span>`);
+  const t = L.top10?.at(-1);
+  if (t) chips.push(`<span class="chip">Макс. ставка топ-10 банков <b>${fmt(t.rate, 2)}%</b></span>`);
+  if (L.bill) chips.push(`<span class="chip warn">Закон 617-9: <b>${esc(L.bill.stage)}</b></span>`);
+  chips.push(`<span class="chip">Данные от <b>${ruDate(L.updated)}</b></span>`);
+  $("live").innerHTML = chips.join("");
+
+  const items = L.news?.items || [];
+  $("news").innerHTML = items.length ? items.slice(0, 12).map(n =>
+    `<li><a href="${safeUrl(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a><div class="src">${esc(ruDate(n.date))} · ${esc(n.source)}</div></li>`).join("")
+    : `<li class="sub">Свежих новостей по теме нет.</li>`;
+
+  const ch = L.key?.changes || [];
+  if (ch.length) {
+    // monthly series (rate on the 1st), so the x axis is real time
+    const pts = [];
+    for (let d = new Date(Date.UTC(2023, 5, 1)); d.toISOString() <= L.key.current.date + "T"; d.setUTCMonth(d.getUTCMonth() + 1)) {
+      const iso = d.toISOString().slice(0, 10);
+      let r = null; for (const [cd, cr] of ch) { if (cd <= iso) r = cr; else break; }
+      if (r != null) pts.push([iso, r]);
+    }
+    pts.push([L.key.current.date, L.key.current.rate]);
+    drawLines($("key-chart"), pts.map(p => p[0].slice(2, 7).split("-").reverse().join(".")), [{ v: pts.map(p => p[1]), color: "var(--accent)", step: true }]);
+  }
+  const tp = (L.top10 || []).slice(-36);
+  if (tp.length) drawLines($("top-chart"), tp.map(p => p.decade.replace(/^[IV]+\./, "")), [{ v: tp.map(p => p.rate), color: "var(--gold)" }]);
+
+  const bad = (L.banks || []).filter(b => !b.ok).map(b => b.name);
+  $("data-status").textContent = `Ставки: ${(L.banks || []).filter(b => b.ok).map(b => b.name).join(", ")}${bad.length ? `; не обновились: ${bad.join(", ")}` : ""}. Сбербанк и Альфа-Банк пока не собираются: их сайты отдают ставки только через JavaScript.`;
+}
+
+async function loadLive() {
+  try {
+    const r = await fetch("data/live.json", { cache: "no-cache" });
+    if (r.ok) {
+      LIVE = await r.json();
+      applyKeyMax(LIVE.key?.maxByYear);
+      OFFERS = (LIVE.banks || []).flatMap(b => (b.offers || []).map(o => ({ ...o, bank: b.name, bankId: b.id, url: b.url, ok: b.ok, updated: b.updated })));
+    }
+  } catch (e) {}
+  renderLive(); renderDeps(); update();
 }
 
 $("add").addEventListener("click", () => {
-  state.deposits.push({ name: `Вклад ${state.deposits.length + 1}`, sum: "", rate: "", months: "12", cap: false, manual: "" });
+  state.deposits.push({ bank: "", product: "", name: "", sum: "", rate: "", months: "12", cap: false, manual: "" });
   renderDeps(); update();
-  $("n" + (state.deposits.length - 1)).focus();
+  $("bk" + (state.deposits.length - 1)).focus();
 });
 $("reset").addEventListener("click", () => {
   state = structuredClone(DEFAULT);
-  for (const id of ["year", "other", "invest", "key", "infl", "withheld"]) $(id).value = state[id] ?? "";
-  renderDeps(); update();
+  for (const [id, k] of FIELDS) $(id).value = state[k] ?? "";
+  $("b-cond").checked = false;
+  renderYears(); renderDeps(); update();
 });
 
-bindParams(); renderDeps(); update();
+renderYears(); bindParams(); renderDeps(); update(); loadLive();
 </script>
 </body>
 </html>

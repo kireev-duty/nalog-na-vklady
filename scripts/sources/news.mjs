@@ -4,12 +4,16 @@ import { fetchText, visibleText, rssItems } from "../lib.mjs";
 export const BILL = { id: "617-9", url: "https://sozd.duma.gov.ru/bill/617-9" };
 
 const TOPIC = /вклад|депозит|ключев|накопительн|НДФЛ|налог на процент|страховани[ея] вкладов|АСВ|процентн(?:ые|ых) ставк/i;
+const GENERAL = /ключев(?:ая|ую|ой) ставк|ставк[а-я]* по вклад|доходност[а-я]* вклад|страховани[ея] вкладов|(НДФЛ|налог)[^.]{0,60}(вклад|процент|пассивн)|(вклад|процент|пассивн)[^.]{0,60}(НДФЛ|налог)/i;
 // news that may require changing the calculator rules
 export const RULE_NEWS = /(НДФЛ|налог)[^.]{0,80}(вклад|процент|пассивн)|(вклад|процент|пассивн)[^.]{0,80}(НДФЛ|налог)|617-9|необлагаем/i;
 
 const FEEDS = [
   { source: "Банк России", url: "https://www.cbr.ru/rss/RssPress", filter: /ключев|вклад|депозит|процентн|сбережен|страховани/i },
   { source: "Банки.ру", url: "https://www.banki.ru/xml/news.rss", filter: TOPIC },
+  // general feeds: only clear money topics (the bill card on sozd.duma.gov.ru is not reachable from GitHub servers)
+  { source: "РИА Новости", url: "https://ria.ru/export/rss2/archive/index.xml", filter: GENERAL },
+  { source: "ТАСС", url: "https://tass.ru/rss/v2.xml", filter: GENERAL },
 ];
 
 export async function news() {

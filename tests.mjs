@@ -3,8 +3,11 @@ import { readFileSync } from "node:fs";
 
 const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
 const code = html.match(/<script id="core">([\s\S]*?)<\/script>/)[1];
-const { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES } =
-  new Function(code + "; return { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES };")();
+const { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax } =
+  new Function(code + "; return { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax };")();
+const { summarizeKey } = await import("./scripts/sources/cbr.mjs");
+const { parseBill } = await import("./scripts/sources/news.mjs");
+const { parseCards } = await import("./scripts/sources/banks.mjs");
 
 let fails = 0, n = 0;
 function eq(name, got, want, eps = 0.005) {
@@ -64,6 +67,58 @@ for (let i = 0; i < 3000; i++) {
   if (a.newTax + 1 < a.oldTax) { fails++; console.log(`FAIL new<old ${S}/${I}`); }
   n += 3;
 }
+
+// --- compareOffers: 2 mln for a year, 2027, no other interest → 240 000 − 10 400
+const offers = [
+  { bank: "A", name: "x", rate: 12, minSum: 10000, termDays: { from: 90, to: 1100 } },
+  { bank: "B", name: "y", rate: 14, minSum: 5e6, termDays: null },            // sum too small
+  { bank: "C", name: "z", rate: 13, minSum: null, termDays: { from: 30, to: 95 } }, // term too short
+  { bank: "D", name: "w", rate: 20, cond: true },                              // special conditions
+];
+let cmp = compareOffers(offers, { amount: 2e6, months: 12, year: 2027 });
+eq("cmp count", cmp.length, 1); eq("cmp interest", cmp[0].interest, 240000); eq("cmp tax", cmp[0].tax, 10400); eq("cmp net", cmp[0].net, 229600);
+// with 200 000 of interest already elsewhere the allowance is used: extra tax = tax(440k) − tax(200k)
+cmp = compareOffers(offers, { amount: 2e6, months: 12, year: 2027, baseInterest: 200000 });
+eq("cmp shared allowance", cmp[0].tax, 31200);
+eq("cmp cond on", compareOffers(offers, { amount: 2e6, months: 12, year: 2027, includeCond: true }).length, 2);
+eq("cmp sorted", compareOffers(offers, { amount: 2e6, months: 12, year: 2027, includeCond: true })[0].rate, 20);
+eq("cmp 3 months", compareOffers(offers, { amount: 2e6, months: 3, year: 2027 })[0].bank === "C" ? 1 : 0, 1);
+
+// --- forecast: 1 mln at 10% from 2027 — under the 160k allowance, no tax
+let fc = forecast({ amount: 1e6, rate: 10, years: 2, year0: 2027 });
+eq("fc y1", fc[0].capital, 1100000); eq("fc y2", fc[1].capital, 1210000); eq("fc tax0", fc[1].tax, 0);
+// 3 mln at 10%: 300k − 160k = 140k × 13% = 18 200
+fc = forecast({ amount: 3e6, rate: 10, years: 1, year0: 2027, inflation: 10 });
+eq("fc tax", fc[0].tax, 18200); eq("fc cap", fc[0].capital, 3281800); eq("fc noTax", fc[0].noTax, 3300000);
+eq("fc real", fc[0].real, 3281800 / 1.1, 0.01);
+// unknown future key rate → futureKey used: 2029 uses 2028 rate
+fc = forecast({ amount: 3e6, rate: 10, years: 1, year0: 2029, futureKey: 10 });
+eq("fc future key", fc[0].tax, (300000 - 100000) * 0.13);
+
+// --- applyKeyMax from live data
+applyKeyMax({ 2027: { rate: 12, months: 12 } });
+eq("applyKeyMax", calc({ year: 2028, deposits: dep(0) }).free, 120000);
+delete RULES.KEY_MAX[2027];
+
+// --- summarizeKey: rate on the 1st of month, max per year
+const days = [["2024-12-30", 21], ["2025-01-09", 21], ["2025-06-09", 20], ["2025-12-22", 16], ["2026-02-16", 15.5], ["2026-03-02", 15.5]];
+const sk = summarizeKey(days);
+eq("key 2025 max", sk.maxByYear[2025].rate, 21); eq("key 2026 max", sk.maxByYear[2026].rate, 16);
+eq("key 2026 months", sk.maxByYear[2026].months, 3); eq("key changes", sk.changes.length, 4);
+
+// --- bill card parser on a synthetic page
+const bh = `<div>Рассмотрение законопроекта в первом чтении <span>26.10.2026</span></div>
+  <div>Рассмотрение законопроекта в третьем чтении Принятие решения 22.11.2026</div>
+  <div>Рассмотрение законопроекта Государственной Думой 24.11.2026</div>`;
+const pb = parseBill(bh);
+eq("bill stage", pb.stage === "Госдума: третье чтение" ? 1 : 0, 1); eq("bill last", pb.last.date === "2026-11-24" ? 1 : 0, 1);
+eq("bill SF", parseBill(bh + "<p>Рассмотрение закона Советом Федерации 03.12.2026</p>").stage === "в Совете Федерации" ? 1 : 0, 1);
+
+// --- bank card parser on synthetic text
+const cards = parseCards("Вклады ВТБ-Вклад в рублях Вклад на ваших условиях До 13,7% Ставка, годовых От 10 000 ₽ Сумма вклада 2-36 мес. Срок Подробнее " +
+  "Вклад «Двойная выгода» для участников ПДС До 18% Ставка, годовых От 30 000 ₽ Подробнее ВТБ-Вклад в юанях До 0,9% Ставка, годовых Подробнее");
+eq("cards n", cards.length, 2); eq("cards rate", cards[0].rate, 13.7); eq("cards min", cards[0].minSum, 10000);
+eq("cards term", cards[0].termDays.to, Math.round(36 * 30.4)); eq("cards cond", cards[1].cond ? 1 : 0, 1);
 
 console.log(fails ? `${fails} of ${n} failed` : `all ${n} checks passed`);
 process.exit(fails ? 1 : 0);

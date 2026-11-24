@@ -61,6 +61,7 @@ if (bl) {
     issues.push({ title: `Законопроект 617-9: ${bl.stage}`,
       body: `Новое событие ${bl.last.date}: ${bl.last.text}\n${bl.url}\n\nПроверить: подписан ли закон, не поменялись ли порог, шкала и порядок удержания. Поправить \`RULES\` и сноски в index.html, README.` });
   state.bill = bl.fingerprint;
+  bl.checked = now;
   items = [{ date: bl.last.date, source: "Госдума", title: `Законопроект 617-9 (налог на вклады): ${bl.stage}`, link: bl.url, pinned: true },
     ...items.filter((x) => !x.pinned)];
 }

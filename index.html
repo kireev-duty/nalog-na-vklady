@@ -109,16 +109,39 @@ input[aria-invalid="true"]{border-color:var(--bad);background:var(--bad-soft)}
 .dep .warn-txt{color:var(--bad);font-size:.85rem}
 .dep .man-txt{color:var(--gold);font-size:.85rem;font-weight:600}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tabbar{position:sticky;top:0;z-index:5;background:var(--bg);margin:0 0 6px;padding:8px 0 10px}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tab-sum{display:block;margin-top:6px;font-size:.9rem;color:var(--text);text-decoration:none}
+.tab-sum b{font-variant-numeric:tabular-nums}
+.tabs::-webkit-scrollbar{display:none}
+.t-short{display:none}
+@media (max-width:420px){.t-long{display:none}.t-short{display:inline}.tabs{gap:4px}.tabs button{padding:6px 11px;font-size:.92rem}}
+h2,.total{scroll-margin-top:120px}
+.tabs button{flex:none;border-radius:999px;font-weight:600;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (prefers-color-scheme:dark){.tabs button[aria-selected="true"]{color:#0c1210}}
+@media (max-width:600px){.live{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-16px;padding-right:16px}.live::-webkit-scrollbar{display:none}}
 </style>
 </head>
 <body>
 <main>
 <header class="top">
   <h1>Налог на вклады: 2025–2028</h1>
-  <p class="lead">Считает НДФЛ с процентов по всем твоим вкладам сразу, показывает старые и новые с 2027 года правила, подсказывает, где после налога выгоднее, и прогнозирует капитал. Ставки банков и ключевая ЦБ обновляются каждый день.</p>
+  <p class="lead">НДФЛ с процентов по вкладам, где выгоднее после налога и сколько нужно, чтобы жить на проценты. Ставки обновляются каждый день.</p>
   <div class="live" id="live" aria-live="polite"><span class="chip">Загружаю свежие данные…</span></div>
 </header>
 
+<div class="tabbar">
+<nav class="tabs" role="tablist" aria-label="Разделы">
+  <button type="button" role="tab" id="t-tax" aria-controls="p-tax" data-tab="tax">Налог</button>
+  <button type="button" role="tab" id="t-best" aria-controls="p-best" data-tab="best"><span class="t-long">Где выгоднее</span><span class="t-short">Банки</span></button>
+  <button type="button" role="tab" id="t-life" aria-controls="p-life" data-tab="life">На проценты</button>
+  <button type="button" role="tab" id="t-news" aria-controls="p-news" data-tab="news">Новости</button>
+</nav>
+<a class="tab-sum" id="tab-sum" href="#h-res" hidden></a>
+</div>
+
+<div role="tabpanel" id="p-tax" aria-labelledby="t-tax">
 <section class="card" aria-labelledby="h-deps">
   <h2 id="h-deps"><span class="n">1</span>Мои вклады и счета</h2>
   <div id="deps"></div>
@@ -178,9 +201,11 @@ input[aria-invalid="true"]{border-color:var(--bad);background:var(--bad-soft)}
     <div id="why"></div>
   </details>
 </section>
+</div>
 
+<div role="tabpanel" id="p-best" aria-labelledby="t-best" hidden>
 <section class="card" aria-labelledby="h-best">
-  <h2 id="h-best"><span class="n">4</span>Куда положить выгоднее — после налога</h2>
+  <h2 id="h-best">Куда положить выгоднее — после налога</h2>
   <div class="grid">
     <div><label for="b-amount">Сумма, ₽</label><input id="b-amount" inputmode="decimal" autocomplete="off"></div>
     <div><label for="b-months">Срок</label>
@@ -189,31 +214,20 @@ input[aria-invalid="true"]{border-color:var(--bad);background:var(--bad-soft)}
   </div>
   <p class="hint" id="b-hint"></p>
   <div class="scroll"><table class="offers" id="b-table"></table></div>
-  <p class="hint">Ставки «до X%» — максимальные по продукту с сайта банка; на твоём сроке и сумме ставка может быть ниже. Налог считается с учётом процентов по твоим вкладам из блока 1 и зарплаты. Сравнение без капитализации.</p>
+  <button type="button" class="link" id="b-more" hidden></button>
+  <details><summary>Как считается</summary><p class="hint">Ставки «до X%» — максимальные по продукту с сайта банка; на твоём сроке и сумме ставка может быть ниже. Налог считается с учётом процентов по твоим вкладам и зарплаты с вкладки «Налог». Сравнение без капитализации.</p></details>
 </section>
+</div>
 
-<section class="card" aria-labelledby="h-fc">
-  <h2 id="h-fc"><span class="n">5</span>Прогноз капитала</h2>
-  <div class="grid">
-    <div><label for="f-amount">Сумма сейчас, ₽</label><input id="f-amount" inputmode="decimal" autocomplete="off"></div>
-    <div><label for="f-rate">Ставка, % годовых</label><input id="f-rate" inputmode="decimal" autocomplete="off"></div>
-    <div><label for="f-years">Лет: <b id="f-years-out">5</b></label><input id="f-years" type="range" min="1" max="10" value="5"></div>
-    <div><label for="f-key">Ключевая в будущем, %</label><input id="f-key" inputmode="decimal" autocomplete="off">
-      <div class="hint">Для льготы на годы, когда ставка ещё неизвестна</div></div>
-  </div>
-  <div class="legend"><span><i style="background:var(--muted)"></i>без налога</span><span><i style="background:var(--accent)"></i>после налога</span><span><i style="background:var(--gold)"></i>после налога и инфляции (в сегодняшних деньгах)</span></div>
-  <svg class="chart" id="f-chart" viewBox="0 0 640 260" role="img" aria-label="График капитала по годам"></svg>
-  <div class="scroll"><table id="f-table"></table></div>
-</section>
-
+<div role="tabpanel" id="p-life" aria-labelledby="t-life" hidden>
 <section class="card" aria-labelledby="h-life" aria-live="polite">
-  <h2 id="h-life"><span class="n">6</span>Сколько держать, чтобы жить на проценты</h2>
+  <h2 id="h-life">Сколько держать, чтобы жить на проценты</h2>
   <div class="grid">
     <div><label for="l-monthly">Нужно в месяц на руки, ₽</label><input id="l-monthly" inputmode="decimal" autocomplete="off" placeholder="100 000"></div>
     <div><label for="l-rate">Ставка, % годовых</label><input id="l-rate" inputmode="decimal" autocomplete="off">
       <div class="hint" id="l-rate-hint"></div></div>
     <div><label for="l-other">Другие доходы в год, ₽</label><input id="l-other" inputmode="decimal" autocomplete="off" placeholder="0">
-      <div class="hint">Зарплата, пенсия. С 2027 поднимает ставку налога на проценты</div></div>
+      <div class="hint">Зарплата, пенсия</div></div>
   </div>
   <div class="cmp" id="l-cmp" style="margin-top:14px"></div>
   <div class="result" style="margin-top:14px">
@@ -241,16 +255,34 @@ input[aria-invalid="true"]{border-color:var(--bad);background:var(--bad-soft)}
       <svg class="chart" id="g-chart" viewBox="0 0 640 240" role="img" aria-label="Капитал и цель по годам"></svg>
     </div>
   </div>
-  <p class="hint">Взнос в рублях не меняется, ставка постоянная, проценты капитализируются каждый месяц. Налог, пока копишь, — с учётом зарплаты из блока 2. Цель растёт с инфляцией: через 10 лет на те же покупки нужно больше рублей.</p>
-  <div class="note" id="l-note"></div>
+  <details><summary>Как считается</summary>
+    <p class="hint">Взнос в рублях не меняется, ставка постоянная, проценты капитализируются каждый месяц. Налог, пока копишь, — с учётом зарплаты с вкладки «Налог». Цель растёт с инфляцией: через 10 лет на те же покупки нужно больше рублей.</p>
+    <div class="note" id="l-note"></div></details>
 </section>
 
+<section class="card" aria-labelledby="h-fc">
+  <h2 id="h-fc">Прогноз капитала</h2>
+  <div class="grid">
+    <div><label for="f-amount">Сумма сейчас, ₽</label><input id="f-amount" inputmode="decimal" autocomplete="off"></div>
+    <div><label for="f-rate">Ставка, % годовых</label><input id="f-rate" inputmode="decimal" autocomplete="off"></div>
+    <div><label for="f-years">Лет: <b id="f-years-out">5</b></label><input id="f-years" type="range" min="1" max="10" value="5"></div>
+    <div><label for="f-key">Ключевая в будущем, %</label><input id="f-key" inputmode="decimal" autocomplete="off">
+      <div class="hint">Для льготы на годы, когда ставка ещё неизвестна</div></div>
+  </div>
+  <div class="legend"><span><i style="background:var(--muted)"></i>без налога</span><span><i style="background:var(--accent)"></i>после налога</span><span><i style="background:var(--gold)"></i>после налога и инфляции (в сегодняшних деньгах)</span></div>
+  <svg class="chart" id="f-chart" viewBox="0 0 640 260" role="img" aria-label="График капитала по годам"></svg>
+  <div class="scroll"><table id="f-table"></table></div>
+</section>
+</div>
+
+<div role="tabpanel" id="p-news" aria-labelledby="t-news" hidden>
 <section class="card" aria-labelledby="h-news">
-  <h2 id="h-news"><span class="n">7</span>Что изменилось</h2>
+  <h2 id="h-news">Что изменилось</h2>
   <div class="two">
     <div>
       <h3 style="margin-top:0">Новости о вкладах, ставках и налоге</h3>
       <ul class="news" id="news"><li class="sub">Нет данных — страница открыта без интернета.</li></ul>
+      <button type="button" class="link" id="news-more" hidden></button>
     </div>
     <div>
       <h3 style="margin-top:0">Ключевая ставка ЦБ</h3>
@@ -261,6 +293,7 @@ input[aria-invalid="true"]{border-color:var(--bad);background:var(--bad-soft)}
     </div>
   </div>
 </section>
+</div>
 
 <footer>
   Правила: ст. 214.2, п. 1 и 1.1 ст. 224 НК РФ; с 2027 — законопроект № 617-9 (принят Госдумой 24.11.2026). Данные: ключевая ставка и максимальная ставка топ-10 — <a href="https://www.cbr.ru/hd_base/KeyRate/">Банк России</a>; ставки — с сайтов банков раз в день; новости — ЦБ, Банки.ру, РИА, ТАСС.
@@ -542,9 +575,9 @@ const DEFAULT = {
   year: "2026", other: "", invest: "", key: "", infl: "6", withheld: "",
   deposits: [{ bank: "", product: "", name: "", sum: "1 000 000", rate: "14", months: "12", cap: true, manual: "" }],
   bAmount: "", bMonths: "12", bCond: false, fAmount: "", fRate: "", fYears: "5", fKey: "",
-  lMonthly: "", lRate: "", lOther: "", gStart: "", gAdd: "", gYears: "", gGoal: "",
+  tab: "tax", lMonthly: "", lRate: "", lOther: "", gStart: "", gAdd: "", gYears: "", gGoal: "",
 };
-let LIVE = null, OFFERS = [];
+let LIVE = null, OFFERS = [], bestAll = false, newsAll = false;
 let state = load();
 
 function load() {
@@ -673,6 +706,7 @@ function update() {
   });
 
   $("res-label").textContent = `НДФЛ с процентов за ${r.year} год`;
+  $("tab-sum").innerHTML = `НДФЛ за ${r.year}: <b>${rubs(r.tax)}</b> · проценты ${rubs(r.interest)} <span class="sub">→ к итогу</span>`;
   const taxEl = $("res-tax"), taxTxt = rubs(r.tax);
   if (taxEl.textContent !== taxTxt) { taxEl.textContent = taxTxt; taxEl.classList.remove("flash"); void taxEl.offsetWidth; taxEl.classList.add("flash"); }
   $("res-pills").innerHTML = r.base === 0
@@ -717,7 +751,7 @@ function update() {
       <div><span class="sub">с 2027: поверх зарплаты</span><b>${rubs(r.newTax)}</b></div>
     </div>
     <p class="sub" style="margin:8px 0 0">${r.base === 0 ? "Проценты в пределах льготы — налога нет ни по старым, ни по новым правилам. Зарплата начнёт влиять, только когда проценты превысят льготу."
-      : d === 0 ? (sal > 0 ? "Разницы нет: вместе с зарплатой всё укладывается в 13%." : "Разницы нет: всё укладывается в 13%. Введи зарплату в блоке 2 — с 2027 она может поднять ставку.")
+      : d === 0 ? (sal > 0 ? "Разницы нет: вместе с зарплатой всё укладывается в 13%." : "Разницы нет: всё укладывается в 13%. Введи зарплату выше — с 2027 она может поднять ставку.")
       : `Новые правила дороже на <b class="up">${rubs(d)}</b> в год — только налог с процентов, налог с зарплаты не меняется.`}</p>`;
 
   if (r.yld) {
@@ -792,7 +826,7 @@ function renderLife(r) {
   renderGoal({ ...base, futureKey, mine, spendOk: spend.possible, keepOk: keep.possible });
   if (mine > 0) {
     const a = incomeFrom(mine, { ...base, preserve: false }), b = incomeFrom(mine, { ...base, preserve: true });
-    $("l-mine").innerHTML = `Твои вклады из блока 1 (${rubs(mine)}) при ${fmt(rate, 2).replace(/,00$/, "")}% дают <b>${rubs(a.monthly)}</b> в месяц после налога`
+    $("l-mine").innerHTML = `Твои вклады с вкладки «Налог» (${rubs(mine)}) при ${fmt(rate, 2).replace(/,00$/, "")}% дают <b>${rubs(a.monthly)}</b> в месяц после налога`
       + (b.monthly > 0 ? `, а если не беднеть — <b>${rubs(b.monthly)}</b>.` : ", но инфляцию ставка не перекрывает.");
   } else $("l-mine").innerHTML = "";
 
@@ -811,10 +845,13 @@ function renderBest(r) {
     ? `Для ${rubs(amount)} на ${$("b-months").selectedOptions[0].text}: ${list.length} предложений подходят по сумме и сроку.`
     : "Под эту сумму и срок предложений нет — попробуй другой срок или включи вклады с условиями.";
   $("b-table").innerHTML = list.length ? `<thead><tr><th>Банк и продукт</th><th class="r">Ставка</th><th class="r m-hide">Доход</th><th class="r m-hide">Налог</th><th class="r">На руки</th><th class="r m-hide">Реально</th></tr></thead><tbody>` +
-    list.slice(0, 12).map((o, i) => `<tr${i === 0 ? ' class="best"' : ""}>
+    list.slice(0, bestAll ? 12 : 5).map((o, i) => `<tr${i === 0 ? ' class="best"' : ""}>
       <td><a class="bank" href="${safeUrl(o.url)}" target="_blank" rel="noopener">${esc(o.bank)}</a>${o.ok === false ? ' <span class="pill warn">на ' + esc(ruDate(o.updated)) + "</span>" : ""}<div class="prod">${esc(o.name)}${o.kind === "savings" ? " · накопительный счёт" : ""}${o.cond ? ' · <span class="pill warn">с условиями</span>' : ""}</div></td>
       <td class="r">до ${fmt(o.rate, 2)}%</td><td class="r m-hide">${rubs(o.interest)}</td><td class="r m-hide">${o.tax ? rubs(o.tax) : "0 ₽"}</td>
       <td class="r"><b>${rubs(o.net)}</b><span class="m-only">налог ${rubs(o.tax)}<br>реально ${pct(o.real, 1)}</span></td><td class="r m-hide ${o.real < 0 ? "up" : "down"}">${pct(o.real, 1)}</td></tr>`).join("") + "</tbody>" : "";
+  const more = Math.min(12, list.length) - 5;
+  $("b-more").hidden = bestAll || more <= 0;
+  $("b-more").textContent = `Ещё ${more}`;
 }
 
 function renderForecast(r) {
@@ -915,9 +952,12 @@ function renderLive() {
   $("live").innerHTML = chips.join("");
 
   const items = L.news?.items || [];
-  $("news").innerHTML = items.length ? items.slice(0, 12).map(n =>
+  $("news").innerHTML = items.length ? items.slice(0, newsAll ? 12 : 6).map(n =>
     `<li><a href="${safeUrl(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a><div class="src">${esc(ruDate(n.date))} · ${esc(n.source)}</div></li>`).join("")
     : `<li class="sub">Свежих новостей по теме нет.</li>`;
+  const moreN = Math.min(12, items.length) - 6;
+  $("news-more").hidden = newsAll || moreN <= 0;
+  $("news-more").textContent = `Ещё ${moreN}`;
 
   const ch = L.key?.changes || [];
   if (ch.length) {
@@ -962,6 +1002,36 @@ $("reset").addEventListener("click", () => {
   renderYears(); renderDeps(); update();
 });
 
+// ---------- tabs
+const TABS = ["tax", "best", "life", "news"];
+function showTab(id, focus) {
+  if (!TABS.includes(id)) id = "tax";
+  for (const t of TABS) {
+    const on = t === id;
+    $("t-" + t).setAttribute("aria-selected", String(on));
+    $("t-" + t).tabIndex = on ? 0 : -1;
+    $("p-" + t).hidden = !on;
+  }
+  $("tab-sum").hidden = id !== "tax";
+  if (focus) $("t-" + id).focus();
+  if (state.tab !== id) { state.tab = id; save(); }
+}
+document.querySelectorAll('[role="tab"]').forEach(b => {
+  b.addEventListener("click", () => { showTab(b.dataset.tab); history.replaceState(null, "", "#" + b.dataset.tab); scrollTo({ top: 0 }); });
+  b.addEventListener("keydown", e => {
+    const k = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (!k) return;
+    e.preventDefault();
+    const id = TABS[(TABS.indexOf(b.dataset.tab) + k + TABS.length) % TABS.length];
+    showTab(id, true); history.replaceState(null, "", "#" + id);
+  });
+});
+addEventListener("hashchange", () => { if (TABS.includes(location.hash.slice(1))) showTab(location.hash.slice(1)); });
+$("tab-sum").addEventListener("click", e => { e.preventDefault(); $("h-res").scrollIntoView({ block: "start", behavior: "smooth" }); });
+$("b-more").addEventListener("click", () => { bestAll = true; update(); });
+$("news-more").addEventListener("click", () => { newsAll = true; renderLive(); });
+
+showTab(TABS.includes(location.hash.slice(1)) ? location.hash.slice(1) : state.tab);
 renderYears(); bindParams(); renderDeps(); update(); loadLive();
 </script>
 </body>

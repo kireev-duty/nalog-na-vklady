@@ -3,11 +3,11 @@ import { readFileSync } from "node:fs";
 
 const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
 const code = html.match(/<script id="core">([\s\S]*?)<\/script>/)[1];
-const { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney, liveOnInterest, incomeFrom, yearsToGoal, addForYears } =
-  new Function(code + "; return { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney, liveOnInterest, incomeFrom, yearsToGoal, addForYears };")();
+const { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney, liveOnInterest, incomeFrom, yearsToGoal, addForYears, encodeShare, decodeShare } =
+  new Function(code + "; return { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney, liveOnInterest, incomeFrom, yearsToGoal, addForYears, encodeShare, decodeShare };")();
 const { summarizeKey } = await import("./scripts/sources/cbr.mjs");
 const { parseBill } = await import("./scripts/sources/news.mjs");
-const { parseCards } = await import("./scripts/sources/banks.mjs");
+const { parseCards, parseAkbars, parseUralsib } = await import("./scripts/sources/banks.mjs");
 
 let fails = 0, n = 0;
 function eq(name, got, want, eps = 0.005) {
@@ -119,6 +119,55 @@ const cards = parseCards("Вклады ВТБ-Вклад в рублях Вкл�
   "Вклад «Двойная выгода» для участников ПДС До 18% Ставка, годовых От 30 000 ₽ Подробнее ВТБ-Вклад в юанях До 0,9% Ставка, годовых Подробнее");
 eq("cards n", cards.length, 2); eq("cards rate", cards[0].rate, 13.7); eq("cards min", cards[0].minSum, 10000);
 eq("cards term", cards[0].termDays.to, Math.round(36 * 30.4)); eq("cards cond", cards[1].cond ? 1 : 0, 1);
+
+// --- Ak Bars cards
+const ak = parseAkbars("Вклад «Курс на максимум» Праздничный вклад ко дню рождения Ак Барс Банка До 14,5% максимальная ставка 3 месяца срок вклада От 1 500 000 ₽ минимальная сумма Подробнее " +
+  "Вклад «Ключевой Плюс» Ставка до 15,51% годовых с капитализацией До 15,51% максимальная ставка 1–3 лет срок вклада От 10 000 ₽ минимальная сумма " +
+  "Вклад «Мой выбор» Вклад на особых условиях для тех, кто получает зарплату или пенсию на карту До 13,7% максимальная ставка До 1 года срок вклада От 10 000 ₽ минимальный взнос " +
+  "Вклад «Выгодный курс» Вклад с доходностью в долларах и евро До 1,3% в $ и до 1% в € максимальная ставка До 1 года срок вклада От 100 $/€ минимальный взнос " +
+  "Вклад «Уверенное будущее» для участников с ПДС До 22% — максимальная ставка Срок 3–6 месяцев От 50 000 ₽ Подробнее");
+const akn = Object.fromEntries(ak.map(o => [o.name, o]));
+eq("ak n", ak.length, 4); eq("ak rate", akn["Вклад «Курс на максимум»"].rate, 14.5); eq("ak min", akn["Вклад «Курс на максимум»"].minSum, 1.5e6);
+eq("ak term", akn["Вклад «Курс на максимум»"].termDays.to, 91); eq("ak open", akn["Вклад «Курс на максимум»"].cond ? 1 : 0, 0);
+eq("ak cap cond", akn["Вклад «Ключевой Плюс»"].cond ? 1 : 0, 1); eq("ak salary cond", akn["Вклад «Мой выбор»"].cond ? 1 : 0, 1);
+eq("ak upto term", akn["Вклад «Мой выбор»"].termDays.from, 1); eq("ak pds", akn["Вклад «Уверенное будущее»"].cond ? 1 : 0, 1);
+eq("ak pds term", akn["Вклад «Уверенное будущее»"].termDays.to, Math.round(6 * 30.4));
+
+// --- Uralsib
+const ur = Object.fromEntries(parseUralsib("Вклад «Выгодный» 13,30 % процентная ставка 1 658 ₽ доход " +
+  "Деньги лежат, а вы зарабатываете 14% годовых Выгодный вклад «Доход» на 12 месяцев Выплата процентов в конце срока вклада Сумма вклада — от 1 млн ₽ " +
+  "14,2% годовых Выгодный вклад «Доход» на 12 месяцев Пакет услуг Премиум Сумма вклада — от 10 млн ₽ " +
+  "Вклад «Динамичный» Срок вклада «Динамичный» — 6 месяцев Динамичная ставка от 9,7% до 20% годовых Сумма вклада — от 50 000 ₽ " +
+  "Высокий доход 14.5% для новых клиентов на срок 6 месяцев по вкладу «Доход Плюс».").map(o => [o.name, o]));
+eq("ur n", Object.keys(ur).length, 4); eq("ur dohod", ur["Вклад «Доход»"].rate, 14); eq("ur dohod min", ur["Вклад «Доход»"].minSum, 1e6);
+eq("ur dohod open", ur["Вклад «Доход»"].cond ? 1 : 0, 0); eq("ur vygod", ur["Вклад «Выгодный»"].rate, 13.3);
+eq("ur dyn", ur["Вклад «Динамичный»"].rate, 20); eq("ur dyn cond", ur["Вклад «Динамичный»"].cond ? 1 : 0, 1);
+eq("ur plus", ur["Вклад «Доход Плюс»"].rate, 14.5); eq("ur plus cond", ur["Вклад «Доход Плюс»"].cond ? 1 : 0, 1);
+
+// --- share link
+const DEF = { year: "2026", other: "", infl: "6", bCond: false, tab: "tax",
+  deposits: [{ bank: "", product: "", name: "", sum: "1 000 000", rate: "14", months: "12", cap: true, manual: "" }] };
+const st = { ...DEF, year: "2027", other: "3 млн", bCond: true, tab: "life", junk: "x",
+  deposits: [{ bank: "vtb", product: "2", name: "ВТБ-Вклад «Новый»", sum: "1,5 млн", rate: "16,2", months: "12", cap: false, manual: "" },
+    { bank: "", product: "", name: "", sum: "", rate: "", months: "6", cap: true, manual: "10 000,50" },
+    { bank: "akbars", product: "1", name: "Вклад «Ключевой Плюс»", sum: "2 млн", rate: "15,51", months: "12", cap: true, manual: "" }] };
+const shareCode = encodeShare(st, DEF), back = decodeShare(shareCode, DEF);
+eq("share url-safe", /^[\w-]+$/.test(shareCode) ? 1 : 0, 1); eq("share short", shareCode.length < 600 ? 1 : 0, 1);
+eq("share year", back.year === "2027" ? 1 : 0, 1); eq("share other", back.other === "3 млн" ? 1 : 0, 1);
+eq("share bool", back.bCond === true ? 1 : 0, 1); eq("share tab", back.tab === "life" ? 1 : 0, 1);
+eq("share no junk", "junk" in back ? 0 : 1, 1); eq("share default skipped", "infl" in back ? 0 : 1, 1);
+eq("share deps", back.deposits.length, 3); eq("share dep name", back.deposits[0].name === "ВТБ-Вклад «Новый»" ? 1 : 0, 1);
+eq("share dep cap", back.deposits[0].cap === false && back.deposits[1].cap === true ? 1 : 0, 1);
+eq("share manual", back.deposits[1].manual === "10 000,50" ? 1 : 0, 1);
+eq("share same tax", calc({ year: 2027, other: back.other, deposits: back.deposits }).tax, calc({ year: 2027, other: st.other, deposits: st.deposits }).tax);
+// hostile input: html stripped, long strings cut, wrong types dropped, garbage → null
+const evil = Buffer.from(JSON.stringify({ year: 2027, other: "<img src=x onerror=alert(1)>" + "9".repeat(100), bCond: "yes", tab: { a: 1 },
+  d: [["<b>", 1, 2, "1e6", "12", "12", "true", "x"], "bad"] })).toString("base64url");
+const ev = decodeShare(evil, DEF);
+eq("evil no tags", /[<>]/.test(ev.other) ? 0 : 1, 1); eq("evil cut", ev.other.length, 40);
+eq("evil year number→string", ev.year === "2027" ? 1 : 0, 1); eq("evil bool type", "bCond" in ev ? 0 : 1, 1); eq("evil obj", "tab" in ev ? 0 : 1, 1);
+eq("evil deps", ev.deposits.length, 1); eq("evil cap", ev.deposits[0].cap === false ? 1 : 0, 1);
+eq("garbage", decodeShare("%%%", DEF) === null ? 1 : 0, 1); eq("array", decodeShare(Buffer.from("[1]").toString("base64url"), DEF) === null ? 1 : 0, 1);
 
 // --- parseMoney: how people type sums
 for (const [txt, want] of [["1 000 000", 1e6], ["1000000", 1e6], ["1 млн", 1e6], ["1,5 млн", 1.5e6], ["1.5млн", 1.5e6],

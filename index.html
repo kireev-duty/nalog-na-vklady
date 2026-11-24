@@ -111,7 +111,12 @@ input[aria-invalid="true"]{border-color:var(--bad);background:var(--bad-soft)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .tabbar{position:sticky;top:0;z-index:5;background:var(--bg);margin:0 0 6px;padding:8px 0 10px}
 .tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
-.tab-sum{display:block;margin-top:6px;font-size:.9rem;color:var(--text);text-decoration:none}
+.tabrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
+.tab-sum{font-size:.9rem;color:var(--text);text-decoration:none;min-width:0}
+.share{flex:none;margin-left:auto;font-size:.85rem}
+.shared{margin:0 0 12px}
+.share-box{margin:0 0 12px}
+@media (max-width:420px){.m-hide2{display:none}}
 .tab-sum b{font-variant-numeric:tabular-nums}
 .tabs::-webkit-scrollbar{display:none}
 .t-short{display:none}
@@ -138,8 +143,11 @@ h2,.total{scroll-margin-top:120px}
   <button type="button" role="tab" id="t-life" aria-controls="p-life" data-tab="life">На проценты</button>
   <button type="button" role="tab" id="t-news" aria-controls="p-news" data-tab="news">Новости</button>
 </nav>
-<a class="tab-sum" id="tab-sum" href="#h-res" hidden></a>
+<div class="tabrow"><a class="tab-sum" id="tab-sum" href="#h-res" hidden></a><button type="button" class="link share" id="share">Поделиться расчётом</button></div>
 </div>
+<div class="share-box" id="share-box" hidden><label for="share-url">Скопируй ссылку на расчёт</label><input id="share-url" readonly></div>
+<div class="note shared" id="shared" hidden>Открыт расчёт по ссылке. Твои прежние данные сохранены.
+  <button type="button" class="link" id="shared-undo">Вернуть мои</button> <button type="button" class="link" id="shared-keep">Оставить этот</button></div>
 
 <div role="tabpanel" id="p-tax" aria-labelledby="t-tax">
 <section class="card" aria-labelledby="h-deps">
@@ -558,6 +566,40 @@ function addForYears(o, years) {
   for (let k = 0; k < 60 && hi - lo > 1; k++) { const mid = (lo + hi) / 2; if (ok(mid)) hi = mid; else lo = mid; }
   return Math.ceil(hi / 100) * 100;
 }
+// Share link: only fields that differ from defaults, JSON → UTF-8 → base64url. Lives after "#", never reaches the server.
+const SHARE_DEP_KEYS = ["bank", "product", "name", "sum", "rate", "months", "cap", "manual"];
+function cleanVal(v) {
+  if (typeof v === "boolean") return v;
+  if (typeof v === "number" && isFinite(v)) return String(v);
+  if (typeof v === "string") return v.replace(/[<>"'`]/g, "").slice(0, 40);
+  return undefined;
+}
+function encodeShare(st, def) {
+  const o = {};
+  for (const k of Object.keys(def)) {
+    if (k === "deposits") o.d = (st.deposits || []).slice(0, 20).map(d => SHARE_DEP_KEYS.map(x => d[x] ?? ""));
+    else if (st[k] !== undefined && st[k] !== def[k]) o[k] = st[k];
+  }
+  const bytes = new TextEncoder().encode(JSON.stringify(o));
+  let bin = ""; for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function decodeShare(str, def) {
+  try {
+    const bin = atob(String(str).replace(/-/g, "+").replace(/_/g, "/"));
+    const o = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))));
+    if (!o || typeof o !== "object" || Array.isArray(o)) return null;
+    const out = {};
+    for (const k of Object.keys(def)) {
+      if (k === "deposits" || !(k in o)) continue;
+      const v = cleanVal(o[k]);
+      if (v !== undefined && typeof v === typeof def[k]) out[k] = v;
+    }
+    if (Array.isArray(o.d)) out.deposits = o.d.slice(0, 20).filter(Array.isArray).map(a =>
+      Object.fromEntries(SHARE_DEP_KEYS.map((x, i) => { const v = cleanVal(a[i]); return [x, x === "cap" ? v === true : typeof v === "string" ? v : ""]; })));
+    return out;
+  } catch (e) { return null; }
+}
 </script>
 
 <script>
@@ -706,7 +748,7 @@ function update() {
   });
 
   $("res-label").textContent = `НДФЛ с процентов за ${r.year} год`;
-  $("tab-sum").innerHTML = `НДФЛ за ${r.year}: <b>${rubs(r.tax)}</b> · проценты ${rubs(r.interest)} <span class="sub">→ к итогу</span>`;
+  $("tab-sum").innerHTML = `НДФЛ за ${r.year}: <b>${rubs(r.tax)}</b><span class="m-hide2"> · проценты ${rubs(r.interest)}</span> <span class="sub">→ к итогу</span>`;
   const taxEl = $("res-tax"), taxTxt = rubs(r.tax);
   if (taxEl.textContent !== taxTxt) { taxEl.textContent = taxTxt; taxEl.classList.remove("flash"); void taxEl.offsetWidth; taxEl.classList.add("flash"); }
   $("res-pills").innerHTML = r.base === 0
@@ -975,7 +1017,7 @@ function renderLive() {
   if (tp.length) drawLines($("top-chart"), tp.map(p => p.decade.replace(/^[IV]+\./, "")), [{ v: tp.map(p => p.rate), color: "var(--gold)" }]);
 
   const bad = (L.banks || []).filter(b => !b.ok).map(b => b.name);
-  $("data-status").textContent = `Ставки: ${(L.banks || []).filter(b => b.ok).map(b => b.name).join(", ")}${bad.length ? `; не обновились: ${bad.join(", ")}` : ""}. Сбербанк и Альфа-Банк пока не собираются: их сайты отдают ставки только через JavaScript.`;
+  $("data-status").textContent = `Ставки: ${(L.banks || []).filter(b => b.ok).map(b => b.name).join(", ")}${bad.length ? `; не обновились: ${bad.join(", ")}` : ""}. Не собираются: Сбер, Альфа, МКБ, ОТП, Абсолют, Совкомбанк — их сайты закрыты от роботов.`;
 }
 
 async function loadLive() {
@@ -995,11 +1037,42 @@ $("add").addEventListener("click", () => {
   renderDeps(); update();
   $("bk" + (state.deposits.length - 1)).focus();
 });
-$("reset").addEventListener("click", () => {
-  state = structuredClone(DEFAULT);
+function refreshAll() {
   for (const [id, k] of FIELDS) $(id).value = state[k] ?? "";
-  $("b-cond").checked = false;
+  $("b-cond").checked = !!state.bCond;
   renderYears(); renderDeps(); update();
+}
+$("reset").addEventListener("click", () => { state = structuredClone(DEFAULT); refreshAll(); });
+
+// ---------- share link
+const SHARE_BACKUP = KEY + "-before-link";
+function applyShareHash() {
+  const m = location.hash.match(/^#s=([\w-]+)/);
+  if (!m) return false;
+  const o = decodeShare(m[1], DEFAULT);
+  if (!o) { history.replaceState(null, "", location.pathname); return false; }
+  try { if (!localStorage.getItem(SHARE_BACKUP)) localStorage.setItem(SHARE_BACKUP, JSON.stringify(state)); } catch (e) {}
+  state = { ...structuredClone(DEFAULT), ...o };
+  if (!state.deposits?.length) state.deposits = structuredClone(DEFAULT.deposits);
+  history.replaceState(null, "", "#" + (TABS.includes(state.tab) ? state.tab : "tax"));
+  $("shared").hidden = false;
+  return true;
+}
+$("share").addEventListener("click", async () => {
+  const url = location.origin + location.pathname + "#s=" + encodeShare(state, DEFAULT);
+  try { await navigator.clipboard.writeText(url); $("share").textContent = "Ссылка скопирована"; }
+  catch (e) { $("share-box").hidden = false; $("share-url").value = url; $("share-url").focus(); $("share-url").select(); return; }
+  setTimeout(() => { $("share").textContent = "Поделиться расчётом"; }, 2500);
+});
+$("shared-undo").addEventListener("click", () => {
+  let prev = null;
+  try { prev = JSON.parse(localStorage.getItem(SHARE_BACKUP)); localStorage.removeItem(SHARE_BACKUP); } catch (e) {}
+  state = prev && Array.isArray(prev.deposits) ? { ...structuredClone(DEFAULT), ...prev } : structuredClone(DEFAULT);
+  $("shared").hidden = true; refreshAll(); showTab(state.tab);
+});
+$("shared-keep").addEventListener("click", () => {
+  try { localStorage.removeItem(SHARE_BACKUP); } catch (e) {}
+  $("shared").hidden = true;
 });
 
 // ---------- tabs
@@ -1026,11 +1099,15 @@ document.querySelectorAll('[role="tab"]').forEach(b => {
     showTab(id, true); history.replaceState(null, "", "#" + id);
   });
 });
-addEventListener("hashchange", () => { if (TABS.includes(location.hash.slice(1))) showTab(location.hash.slice(1)); });
+addEventListener("hashchange", () => {
+  if (applyShareHash()) { refreshAll(); showTab(state.tab); return; }
+  if (TABS.includes(location.hash.slice(1))) showTab(location.hash.slice(1));
+});
 $("tab-sum").addEventListener("click", e => { e.preventDefault(); $("h-res").scrollIntoView({ block: "start", behavior: "smooth" }); });
 $("b-more").addEventListener("click", () => { bestAll = true; update(); });
 $("news-more").addEventListener("click", () => { newsAll = true; renderLive(); });
 
+applyShareHash();
 showTab(TABS.includes(location.hash.slice(1)) ? location.hash.slice(1) : state.tab);
 renderYears(); bindParams(); renderDeps(); update(); loadLive();
 </script>

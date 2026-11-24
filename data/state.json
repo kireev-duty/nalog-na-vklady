@@ -1,0 +1,18 @@
+{
+ "seen": [
+  "https://www.banki.ru/news/lenta/?id=11029265",
+  "https://www.banki.ru/news/lenta/?id=11029257",
+  "https://www.cbr.ru/press/PR/?file=639300094094201108BANK_SECTOR.htm",
+  "https://www.cbr.ru/press/PR/?file=639292378686973469BANK_SECTOR.htm",
+  "https://www.cbr.ru/press/PR/?file=639287925395179124FINSTAB.htm"
+ ],
+ "bankFails": {
+  "vtb": 0,
+  "gpb": 0,
+  "tbank": 0,
+  "rshb": 0,
+  "domrf": 0
+ },
+ "bill": "22:2026-11-24:Госдума: третье чтение",
+ "key": 14
+}

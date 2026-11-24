@@ -1,0 +1,757 @@
+{
+ "updated": "2026-11-24T13:28:10.551Z",
+ "key": {
+  "current": {
+   "date": "2026-11-24",
+   "rate": 14
+  },
+  "changes": [
+   [
+    "2022-12-01",
+    7.5
+   ],
+   [
+    "2023-07-24",
+    8.5
+   ],
+   [
+    "2023-08-15",
+    12
+   ],
+   [
+    "2023-09-18",
+    13
+   ],
+   [
+    "2023-10-30",
+    15
+   ],
+   [
+    "2023-12-18",
+    16
+   ],
+   [
+    "2024-07-29",
+    18
+   ],
+   [
+    "2024-09-16",
+    19
+   ],
+   [
+    "2024-10-28",
+    21
+   ],
+   [
+    "2025-06-09",
+    20
+   ],
+   [
+    "2025-07-28",
+    18
+   ],
+   [
+    "2025-09-15",
+    17
+   ],
+   [
+    "2025-10-27",
+    16.5
+   ],
+   [
+    "2025-12-22",
+    16
+   ],
+   [
+    "2026-02-16",
+    15.5
+   ],
+   [
+    "2026-03-23",
+    15
+   ],
+   [
+    "2026-04-27",
+    14.5
+   ],
+   [
+    "2026-06-22",
+    14.25
+   ],
+   [
+    "2026-07-27",
+    14
+   ]
+  ],
+  "maxByYear": {
+   "2022": {
+    "rate": 7.5,
+    "months": 1,
+    "final": false
+   },
+   "2023": {
+    "rate": 15,
+    "months": 12,
+    "final": true
+   },
+   "2024": {
+    "rate": 21,
+    "months": 12,
+    "final": true
+   },
+   "2025": {
+    "rate": 21,
+    "months": 12,
+    "final": true
+   },
+   "2026": {
+    "rate": 16,
+    "months": 11,
+    "final": false
+   }
+  },
+  "nextMeeting": "2026-12-18"
+ },
+ "top10": [
+  {
+   "decade": "I.01.2025",
+   "rate": 21.723
+  },
+  {
+   "decade": "II.01.2025",
+   "rate": 21.523
+  },
+  {
+   "decade": "III.01.2025",
+   "rate": 21.473
+  },
+  {
+   "decade": "I.02.2025",
+   "rate": 21.443
+  },
+  {
+   "decade": "II.02.2025",
+   "rate": 21.058
+  },
+  {
+   "decade": "III.02.2025",
+   "rate": 20.848
+  },
+  {
+   "decade": "I.03.2025",
+   "rate": 20.738
+  },
+  {
+   "decade": "II.03.2025",
+   "rate": 20.382
+  },
+  {
+   "decade": "III.03.2025",
+   "rate": 20.282
+  },
+  {
+   "decade": "I.04.2025",
+   "rate": 20.052
+  },
+  {
+   "decade": "II.04.2025",
+   "rate": 20.036
+  },
+  {
+   "decade": "III.04.2025",
+   "rate": 19.792
+  },
+  {
+   "decade": "I.05.2025",
+   "rate": 19.602
+  },
+  {
+   "decade": "II.05.2025",
+   "rate": 19.523
+  },
+  {
+   "decade": "III.05.2025",
+   "rate": 19.385
+  },
+  {
+   "decade": "I.06.2025",
+   "rate": 18.871
+  },
+  {
+   "decade": "II.06.2025",
+   "rate": 18.401
+  },
+  {
+   "decade": "III.06.2025",
+   "rate": 18.321
+  },
+  {
+   "decade": "I.07.2025",
+   "rate": 17.913
+  },
+  {
+   "decade": "II.07.2025",
+   "rate": 17.223
+  },
+  {
+   "decade": "III.07.2025",
+   "rate": 16.444
+  },
+  {
+   "decade": "I.08.2025",
+   "rate": 15.959
+  },
+  {
+   "decade": "II.08.2025",
+   "rate": 15.849
+  },
+  {
+   "decade": "III.08.2025",
+   "rate": 15.699
+  },
+  {
+   "decade": "I.09.2025",
+   "rate": 15.589
+  },
+  {
+   "decade": "II.09.2025",
+   "rate": 15.56
+  },
+  {
+   "decade": "III.09.2025",
+   "rate": 15.55
+  },
+  {
+   "decade": "I.10.2025",
+   "rate": 15.46
+  },
+  {
+   "decade": "II.10.2025",
+   "rate": 15.45
+  },
+  {
+   "decade": "III.10.2025",
+   "rate": 15.369
+  },
+  {
+   "decade": "I.11.2025",
+   "rate": 15.319
+  },
+  {
+   "decade": "II.11.2025",
+   "rate": 15.499
+  },
+  {
+   "decade": "III.11.2025",
+   "rate": 15.619
+  },
+  {
+   "decade": "I.12.2025",
+   "rate": 15.629
+  },
+  {
+   "decade": "II.12.2025",
+   "rate": 15.38
+  },
+  {
+   "decade": "III.12.2025",
+   "rate": 15.282
+  },
+  {
+   "decade": "I.01.2026",
+   "rate": 15.102
+  },
+  {
+   "decade": "II.01.2026",
+   "rate": 14.877
+  },
+  {
+   "decade": "III.01.2026",
+   "rate": 14.568
+  },
+  {
+   "decade": "I.02.2026",
+   "rate": 14.489
+  },
+  {
+   "decade": "II.02.2026",
+   "rate": 14.26
+  },
+  {
+   "decade": "III.02.2026",
+   "rate": 14.059
+  },
+  {
+   "decade": "I.03.2026",
+   "rate": 13.865
+  },
+  {
+   "decade": "II.03.2026",
+   "rate": 13.795
+  },
+  {
+   "decade": "III.03.2026",
+   "rate": 13.555
+  },
+  {
+   "decade": "I.04.2026",
+   "rate": 13.425
+  },
+  {
+   "decade": "II.04.2026",
+   "rate": 13.385
+  },
+  {
+   "decade": "III.04.2026",
+   "rate": 13.06
+  },
+  {
+   "decade": "I.05.2026",
+   "rate": 13.04
+  },
+  {
+   "decade": "II.05.2026",
+   "rate": 13.035
+  },
+  {
+   "decade": "III.05.2026",
+   "rate": 12.965
+  },
+  {
+   "decade": "I.06.2026",
+   "rate": 12.965
+  },
+  {
+   "decade": "II.06.2026",
+   "rate": 12.856
+  },
+  {
+   "decade": "III.06.2026",
+   "rate": 12.756
+  },
+  {
+   "decade": "I.07.2026",
+   "rate": 12.786
+  },
+  {
+   "decade": "II.07.2026",
+   "rate": 12.826
+  },
+  {
+   "decade": "III.07.2026",
+   "rate": 12.845
+  },
+  {
+   "decade": "I.08.2026",
+   "rate": 12.885
+  },
+  {
+   "decade": "II.08.2026",
+   "rate": 12.895
+  },
+  {
+   "decade": "III.08.2026",
+   "rate": 12.895
+  },
+  {
+   "decade": "I.09.2026",
+   "rate": 12.948
+  },
+  {
+   "decade": "II.09.2026",
+   "rate": 13.005
+  },
+  {
+   "decade": "III.09.2026",
+   "rate": 13.055
+  },
+  {
+   "decade": "I.10.2026",
+   "rate": 13.055
+  },
+  {
+   "decade": "II.10.2026",
+   "rate": 13.055
+  },
+  {
+   "decade": "III.10.2026",
+   "rate": 13.085
+  },
+  {
+   "decade": "I.11.2026",
+   "rate": 13.305
+  }
+ ],
+ "banks": [
+  {
+   "id": "vtb",
+   "name": "ВТБ",
+   "url": "https://www.vtb.ru/personal/vklady-i-scheta/",
+   "updated": "2026-11-24T13:28:10.551Z",
+   "ok": true,
+   "offers": [
+    {
+     "name": "ВТБ-Вклад в рублях",
+     "kind": "deposit",
+     "rate": 13.7,
+     "minSum": 10000,
+     "termDays": {
+      "from": 61,
+      "to": 1094
+     },
+     "cond": false
+    },
+    {
+     "name": "Накопительный ВТБ-Счет в рублях",
+     "kind": "savings",
+     "rate": 14.7,
+     "minSum": 1000,
+     "termDays": null,
+     "cond": false
+    },
+    {
+     "name": "Вклад «Выгодное начало»",
+     "kind": "deposit",
+     "rate": 20,
+     "minSum": 10000,
+     "termDays": {
+      "from": 61,
+      "to": 61
+     },
+     "cond": true
+    },
+    {
+     "name": "ВТБ-Вклад «Ключевой»",
+     "kind": "deposit",
+     "rate": 12.6,
+     "minSum": 500000,
+     "termDays": null,
+     "cond": false
+    },
+    {
+     "name": "Накопительный счет «День в плюсе»",
+     "kind": "savings",
+     "rate": 12,
+     "minSum": 1000,
+     "termDays": null,
+     "cond": true
+    },
+    {
+     "name": "Вклад «Двойная выгода»",
+     "kind": "deposit",
+     "rate": 18,
+     "minSum": 30000,
+     "termDays": {
+      "from": 365,
+      "to": 365
+     },
+     "cond": true
+    },
+    {
+     "name": "Вклад «Жизнь в плюсе»",
+     "kind": "deposit",
+     "rate": 21,
+     "minSum": 10000,
+     "termDays": {
+      "from": 91,
+      "to": 1094
+     },
+     "cond": true
+    },
+    {
+     "name": "Вклад «Вместе»",
+     "kind": "deposit",
+     "rate": 20,
+     "minSum": 10000,
+     "termDays": {
+      "from": 61,
+      "to": 365
+     },
+     "cond": true
+    },
+    {
+     "name": "Семейная копилка",
+     "kind": "savings",
+     "rate": 12,
+     "minSum": 1000,
+     "termDays": null,
+     "cond": false
+    },
+    {
+     "name": "Вклад «Инвестиционный+»",
+     "kind": "deposit",
+     "rate": 19,
+     "minSum": 30000,
+     "termDays": {
+      "from": 365,
+      "to": 365
+     },
+     "cond": true
+    },
+    {
+     "name": "Социальный вклад",
+     "kind": "deposit",
+     "rate": 35,
+     "minSum": null,
+     "termDays": {
+      "from": 365,
+      "to": 365
+     },
+     "cond": true
+    }
+   ]
+  },
+  {
+   "id": "gpb",
+   "name": "Газпромбанк",
+   "url": "https://www.gazprombank.ru/personal/increase/deposits/",
+   "updated": "2026-11-24T13:28:10.551Z",
+   "ok": true,
+   "offers": [
+    {
+     "name": "Вклад «Ключевой момент»",
+     "kind": "deposit",
+     "rate": 16,
+     "minSum": 100000,
+     "termDays": {
+      "from": 122,
+      "to": 1095
+     },
+     "cond": false
+    },
+    {
+     "name": "Вклад «Новые деньги»",
+     "kind": "deposit",
+     "rate": 13.6,
+     "minSum": 15000,
+     "termDays": {
+      "from": 61,
+      "to": 1095
+     },
+     "cond": false
+    },
+    {
+     "name": "Вклад «Копить»",
+     "kind": "deposit",
+     "rate": 12.8,
+     "minSum": 15000,
+     "termDays": {
+      "from": 30,
+      "to": 1095
+     },
+     "cond": false
+    },
+    {
+     "name": "Вклад «В Плюсе»",
+     "kind": "deposit",
+     "rate": 13.6,
+     "minSum": 15000,
+     "termDays": {
+      "from": 30,
+      "to": 1095
+     },
+     "cond": false
+    },
+    {
+     "name": "Вклад «Социальный»",
+     "kind": "deposit",
+     "rate": 18.9,
+     "minSum": 0.01,
+     "termDays": {
+      "from": 365,
+      "to": 365
+     },
+     "cond": true
+    },
+    {
+     "name": "Накопительный счёт",
+     "kind": "savings",
+     "rate": 14.5,
+     "minSum": null,
+     "termDays": null,
+     "cond": false
+    }
+   ]
+  },
+  {
+   "id": "tbank",
+   "name": "Т-Банк",
+   "url": "https://www.tbank.ru/savings/deposit/",
+   "updated": "2026-11-24T13:28:10.551Z",
+   "ok": true,
+   "offers": [
+    {
+     "name": "Вклад",
+     "kind": "deposit",
+     "rate": 14.24,
+     "minSum": 50000,
+     "termDays": null,
+     "cond": false
+    }
+   ]
+  },
+  {
+   "id": "rshb",
+   "name": "Россельхозбанк",
+   "url": "https://www.rshb.ru/natural/deposits/",
+   "updated": "2026-11-24T13:28:10.551Z",
+   "ok": true,
+   "offers": [
+    {
+     "name": "Вклад «Свой вклад»",
+     "kind": "deposit",
+     "rate": 13.5,
+     "minSum": 5000,
+     "termDays": {
+      "from": 1460,
+      "to": 1460
+     },
+     "cond": false
+    },
+    {
+     "name": "Накопительный счёт «Мой счёт»",
+     "kind": "savings",
+     "rate": 14,
+     "minSum": 1,
+     "termDays": null,
+     "cond": false
+    },
+    {
+     "name": "Накопительный счёт «Моя копилка»",
+     "kind": "savings",
+     "rate": 7.5,
+     "minSum": 1,
+     "termDays": null,
+     "cond": false
+    },
+    {
+     "name": "Социальный банковский вклад",
+     "kind": "deposit",
+     "rate": 13.8,
+     "minSum": 0.01,
+     "termDays": {
+      "from": 365,
+      "to": 365
+     },
+     "cond": true
+    },
+    {
+     "name": "Вклад «Ультра Доходный»",
+     "kind": "deposit",
+     "rate": 13.6,
+     "minSum": 1500000,
+     "termDays": null,
+     "cond": true
+    },
+    {
+     "name": "Накопительный счёт «Ультра»",
+     "kind": "savings",
+     "rate": 14,
+     "minSum": 1,
+     "termDays": null,
+     "cond": true
+    },
+    {
+     "name": "Вклад «Ультра Комфортный»",
+     "kind": "deposit",
+     "rate": 7.25,
+     "minSum": 1500000,
+     "termDays": null,
+     "cond": true
+    },
+    {
+     "name": "Вклад «Ультра Пополняемый»",
+     "kind": "deposit",
+     "rate": 7.45,
+     "minSum": 1500000,
+     "termDays": null,
+     "cond": true
+    }
+   ]
+  },
+  {
+   "id": "domrf",
+   "name": "Банк ДОМ.РФ",
+   "url": "https://domrfbank.ru/deposits/",
+   "updated": "2026-11-24T13:28:10.551Z",
+   "ok": true,
+   "offers": [
+    {
+     "name": "Вклад «Мой Дом»",
+     "kind": "deposit",
+     "rate": 14.5,
+     "minSum": 30000,
+     "termDays": {
+      "from": 61,
+      "to": 1095
+     },
+     "cond": false
+    }
+   ]
+  }
+ ],
+ "bill": {
+  "id": "617-9",
+  "url": "https://sozd.duma.gov.ru/bill/617-9",
+  "stage": "Госдума: третье чтение",
+  "last": {
+   "date": "2026-11-24",
+   "text": "Рассмотрение законопроекта Государственной Думой"
+  },
+  "count": 22,
+  "fingerprint": "22:2026-11-24:Госдума: третье чтение"
+ },
+ "news": {
+  "items": [
+   {
+    "date": "2026-11-24",
+    "source": "Госдума",
+    "title": "Законопроект 617-9 (налог на вклады): Госдума: третье чтение",
+    "link": "https://sozd.duma.gov.ru/bill/617-9",
+    "pinned": true
+   },
+   {
+    "date": "2026-11-24",
+    "source": "Банки.ру",
+    "title": "Сколько держать на вкладе в 2026 году, чтобы жить на проценты",
+    "link": "https://www.banki.ru/news/lenta/?id=11029265"
+   },
+   {
+    "date": "2026-11-23",
+    "source": "Банки.ру",
+    "title": "Аномально высокие ставки по вкладам, россияне активно оформляют ипотеку под 8%. Главное за день",
+    "link": "https://www.banki.ru/news/lenta/?id=11029257"
+   },
+   {
+    "date": "2026-11-11",
+    "source": "Банк России",
+    "title": "Результаты мониторинга максимальных процентных ставок кредитных организаций (11.11.2026)",
+    "link": "https://www.cbr.ru/press/PR/?file=639300094094201108BANK_SECTOR.htm"
+   },
+   {
+    "date": "2026-11-02",
+    "source": "Банк России",
+    "title": "Результаты мониторинга максимальных процентных ставок кредитных организаций (02.11.2026)",
+    "link": "https://www.cbr.ru/press/PR/?file=639292378686973469BANK_SECTOR.htm"
+   },
+   {
+    "date": "2026-10-28",
+    "source": "Банк России",
+    "title": "Банк России принял ряд решений по макропруденциальной политике (28.10.2026)",
+    "link": "https://www.cbr.ru/press/PR/?file=639287925395179124FINSTAB.htm"
+   }
+  ]
+ },
+ "log": [
+  "ok   bill 617-9",
+  "ok   bank gpb",
+  "ok   bank vtb",
+  "ok   bank rshb",
+  "ok   bank tbank",
+  "ok   bank domrf",
+  "ok   cbr key rate",
+  "ok   news",
+  "ok   cbr top-10",
+  "ok   cbr calendar"
+ ]
+}

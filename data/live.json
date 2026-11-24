@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24T13:42:22.621Z",
+ "updated": "2026-11-24T14:40:57.588Z",
  "key": {
   "current": {
    "date": "2026-11-24",
@@ -387,7 +387,7 @@
    "id": "vtb",
    "name": "ВТБ",
    "url": "https://www.vtb.ru/personal/vklady-i-scheta/",
-   "updated": "2026-11-24T13:42:22.621Z",
+   "updated": "2026-11-24T14:40:57.588Z",
    "ok": true,
    "offers": [
     {
@@ -505,7 +505,7 @@
    "id": "gpb",
    "name": "Газпромбанк",
    "url": "https://www.gazprombank.ru/personal/increase/deposits/",
-   "updated": "2026-11-24T13:42:22.621Z",
+   "updated": "2026-11-24T14:40:57.588Z",
    "ok": true,
    "offers": [
     {
@@ -577,7 +577,7 @@
    "id": "tbank",
    "name": "Т-Банк",
    "url": "https://www.tbank.ru/savings/deposit/",
-   "updated": "2026-11-24T13:42:22.621Z",
+   "updated": "2026-11-24T14:40:57.588Z",
    "ok": true,
    "offers": [
     {
@@ -594,7 +594,7 @@
    "id": "rshb",
    "name": "Россельхозбанк",
    "url": "https://www.rshb.ru/natural/deposits/",
-   "updated": "2026-11-24T13:42:22.621Z",
+   "updated": "2026-11-24T14:40:57.588Z",
    "ok": true,
    "offers": [
     {
@@ -673,7 +673,7 @@
    "id": "domrf",
    "name": "Банк ДОМ.РФ",
    "url": "https://domrfbank.ru/deposits/",
-   "updated": "2026-11-24T13:42:22.621Z",
+   "updated": "2026-11-24T14:40:57.588Z",
    "ok": true,
    "offers": [
     {
@@ -688,6 +688,90 @@
      "cond": false
     }
    ]
+  },
+  {
+   "id": "bspb",
+   "name": "Банк Санкт-Петербург",
+   "url": "https://www.bspb.ru/retail/deposits",
+   "updated": "2026-11-24T14:40:57.588Z",
+   "ok": true,
+   "offers": [
+    {
+     "name": "Накопительный счёт",
+     "kind": "savings",
+     "rate": 15.5,
+     "minSum": null,
+     "termDays": null,
+     "cond": true
+    },
+    {
+     "name": "Вклад «Осень»",
+     "kind": "deposit",
+     "rate": 13.3,
+     "minSum": null,
+     "termDays": null,
+     "cond": false
+    },
+    {
+     "name": "Вклад «Выгодный старт»",
+     "kind": "deposit",
+     "rate": 15,
+     "minSum": null,
+     "termDays": {
+      "from": 91,
+      "to": 91
+     },
+     "cond": true
+    },
+    {
+     "name": "Вклад «Пенсионный»",
+     "kind": "deposit",
+     "rate": 15.2,
+     "minSum": null,
+     "termDays": null,
+     "cond": true
+    },
+    {
+     "name": "Вклад «Максимальный»",
+     "kind": "deposit",
+     "rate": 12.9,
+     "minSum": null,
+     "termDays": null,
+     "cond": false
+    },
+    {
+     "name": "Вклад «Пополняемый»",
+     "kind": "deposit",
+     "rate": 11.8,
+     "minSum": null,
+     "termDays": null,
+     "cond": false
+    },
+    {
+     "name": "Вклад «Управляемый»",
+     "kind": "deposit",
+     "rate": 11,
+     "minSum": null,
+     "termDays": null,
+     "cond": false
+    }
+   ]
+  },
+  {
+   "id": "akbars",
+   "name": "Ак Барс",
+   "url": "https://www.akbars.ru/individuals/deposits/",
+   "updated": null,
+   "ok": false,
+   "offers": []
+  },
+  {
+   "id": "uralsib",
+   "name": "Уралсиб",
+   "url": "https://www.uralsib.ru/vklady-scheta/vklady",
+   "updated": null,
+   "ok": false,
+   "offers": []
   }
  ],
  "bill": {
@@ -748,10 +832,13 @@
   "ok   news",
   "ok   bank gpb",
   "ok   bank tbank",
-  "ok   cbr key rate",
   "ok   bank vtb",
-  "ok   bank rshb",
   "ok   bank domrf",
+  "ok   bank bspb",
+  "ok   cbr key rate",
+  "ok   bank rshb",
+  "FAIL bank uralsib: https://www.uralsib.ru/vklady-scheta/vklady: fetch failed",
+  "FAIL bank akbars: https://www.akbars.ru/individuals/deposits/: UND_ERR_CONNECT_TIMEOUT",
   "FAIL bill 617-9: https://sozd.duma.gov.ru/bill/617-9: UND_ERR_CONNECT_TIMEOUT"
  ]
 }

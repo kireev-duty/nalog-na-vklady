@@ -71,7 +71,8 @@ th{font-size:.82rem;color:var(--muted);font-weight:600}
 .note{background:var(--gold-soft);border-radius:12px;padding:10px 12px;font-size:.9rem;margin-top:12px}
 .cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cmp div{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
-.cmp b{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.cmp b{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:600px){#l-cmp{grid-template-columns:1fr}}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .offers td{padding:9px 6px 9px 0}
 .offers tr.best td{background:var(--accent-soft)}
@@ -205,8 +206,47 @@ input[aria-invalid="true"]{border-color:var(--bad);background:var(--bad-soft)}
   <div class="scroll"><table id="f-table"></table></div>
 </section>
 
+<section class="card" aria-labelledby="h-life" aria-live="polite">
+  <h2 id="h-life"><span class="n">6</span>Сколько держать, чтобы жить на проценты</h2>
+  <div class="grid">
+    <div><label for="l-monthly">Нужно в месяц на руки, ₽</label><input id="l-monthly" inputmode="decimal" autocomplete="off" placeholder="100 000"></div>
+    <div><label for="l-rate">Ставка, % годовых</label><input id="l-rate" inputmode="decimal" autocomplete="off">
+      <div class="hint" id="l-rate-hint"></div></div>
+    <div><label for="l-other">Другие доходы в год, ₽</label><input id="l-other" inputmode="decimal" autocomplete="off" placeholder="0">
+      <div class="hint">Зарплата, пенсия. С 2027 поднимает ставку налога на проценты</div></div>
+  </div>
+  <div class="cmp" id="l-cmp" style="margin-top:14px"></div>
+  <div class="result" style="margin-top:14px">
+    <div><table id="l-table"></table></div>
+    <div><h3 style="margin-top:0">Если ставка упадёт</h3><table id="l-drop"></table></div>
+  </div>
+  <p class="zero" id="l-mine"></p>
+  <h3 style="margin-top:22px">Когда накоплю</h3>
+  <div class="grid">
+    <div><label for="g-start">Есть сейчас, ₽</label><input id="g-start" inputmode="decimal" autocomplete="off"></div>
+    <div><label for="g-add">Докладываю в месяц, ₽</label><input id="g-add" inputmode="decimal" autocomplete="off" placeholder="50 000"></div>
+    <div><label for="g-years">Хочу успеть за, лет</label><input id="g-years" inputmode="numeric" autocomplete="off" placeholder="15"></div>
+    <fieldset class="seg" id="g-goal"><legend>Цель</legend>
+      <label><input type="radio" name="g-goal" value="keep">не беднеть</label>
+      <label><input type="radio" name="g-goal" value="spend">тратить все</label></fieldset>
+  </div>
+  <div class="result" style="margin-top:14px">
+    <div>
+      <div class="sub" id="g-label"></div>
+      <div class="total" id="g-out"></div>
+      <p class="zero" id="g-need"></p>
+    </div>
+    <div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>капитал</span><span><i style="background:var(--gold)"></i>сколько нужно в тот год</span></div>
+      <svg class="chart" id="g-chart" viewBox="0 0 640 240" role="img" aria-label="Капитал и цель по годам"></svg>
+    </div>
+  </div>
+  <p class="hint">Взнос в рублях не меняется, ставка постоянная, проценты капитализируются каждый месяц. Налог, пока копишь, — с учётом зарплаты из блока 2. Цель растёт с инфляцией: через 10 лет на те же покупки нужно больше рублей.</p>
+  <div class="note" id="l-note"></div>
+</section>
+
 <section class="card" aria-labelledby="h-news">
-  <h2 id="h-news"><span class="n">6</span>Что изменилось</h2>
+  <h2 id="h-news"><span class="n">7</span>Что изменилось</h2>
   <div class="two">
     <div>
       <h3 style="margin-top:0">Новости о вкладах, ставках и налоге</h3>
@@ -411,6 +451,80 @@ function forecast(o) {
   }
   return rows;
 }
+
+// One year of living on a deposit with monthly payouts (no capitalization).
+// preserve: part of the interest goes back so the capital keeps up with inflation.
+function incomeFrom(capital, o) {
+  const C = Math.max(0, money(capital)), r = num(o.rate) / 100, i = num(o.inflation) / 100;
+  const interest = r2(C * r);
+  const c = calc({ year: o.year, other: o.other, invest: o.invest, keyRate: o.keyRate, deposits: [{ manual: interest }] });
+  const reinvest = o.preserve ? r2(C * i) : 0;
+  const net = interest - c.tax - reinvest;
+  return { capital: C, interest, free: c.free, tax: c.tax, reinvest, net, monthly: net / 12, effRate: interest > 0 ? c.tax / interest : 0 };
+}
+
+// Capital needed for a monthly income after tax. Net income grows with capital (marginal tax ≤ 22%), so bisection works.
+function liveOnInterest(o) {
+  const need = Math.max(0, money(o.monthly)) * 12;
+  if (need === 0) return { possible: true, ...incomeFrom(0, o) };
+  const net = C => incomeFrom(C, o).net;
+  let hi = 1e6;
+  while (net(hi) < need && hi < 1e12) hi *= 2;
+  if (net(hi) < need) return { possible: false };
+  let lo = 0;
+  for (let k = 0; k < 80 && hi - lo > 1; k++) { const mid = (lo + hi) / 2; if (net(mid) >= need) hi = mid; else lo = mid; }
+  let c = Math.floor(hi / 1000) * 1000;
+  if (net(c) < need) c += 1000; // round up to 1000 only when needed
+  return { possible: true, ...incomeFrom(c, o) };
+}
+
+// Capital needed at the end of each saving year t: the monthly income is in today's money, so it grows with inflation.
+function goalTargets(o) {
+  const n = Math.max(1, Math.min(60, Math.round(num(o.maxYears) || 50)));
+  const i = num(o.inflation) / 100, y0 = Math.round(num(o.year0)) || 2026, out = [];
+  for (let t = 0; t <= n; t++) {
+    const year = Math.max(2027, y0 + t), k = Math.pow(1 + i, t);
+    const keyRate = defaultKeyRate(year).known ? undefined : o.futureKey;
+    const g = liveOnInterest({ monthly: money(o.monthly) * k, rate: o.rate, inflation: o.inflation, year, keyRate,
+      other: money(o.otherLife) * k, invest: o.invest, preserve: o.preserve });
+    out.push(g.possible ? g.capital : Infinity);
+  }
+  return out;
+}
+
+// Saving: contribution at the start of every month, monthly capitalization, tax at the end of each year by that year's rules.
+function yearsToGoal(o, targets = goalTargets(o)) {
+  const r = num(o.rate) / 100, add = Math.max(0, money(o.add)), y0 = Math.round(num(o.year0)) || 2026;
+  let cap = Math.max(0, money(o.start));
+  const rows = [{ year: y0, capital: cap, target: targets[0], tax: 0 }];
+  if (cap >= targets[0]) return { reached: true, years: 0, year: y0, rows };
+  for (let t = 1; t < targets.length; t++) {
+    const year = y0 + t - 1;
+    let interest = 0;
+    for (let m = 0; m < 12; m++) { cap += add; const x = cap * r / 12; interest += x; cap += x; }
+    const keyRate = defaultKeyRate(year).known ? undefined : o.futureKey;
+    const tax = calc({ year, other: o.otherWork, invest: o.invest, keyRate, deposits: [{ manual: r2(interest) }] }).tax;
+    cap = r2(cap - tax);
+    rows.push({ year: y0 + t, capital: cap, target: targets[t], tax });
+    if (cap >= targets[t]) return { reached: true, years: t, year: y0 + t, rows };
+  }
+  return { reached: false, years: null, year: null, rows };
+}
+
+// Monthly contribution needed to get there within `years`.
+function addForYears(o, years) {
+  const n = Math.max(1, Math.round(num(years)));
+  const targets = goalTargets({ ...o, maxYears: n });
+  if (!isFinite(targets[n])) return null;
+  const ok = add => yearsToGoal({ ...o, add }, targets).reached;
+  if (ok(0)) return 0;
+  let hi = 10000;
+  while (!ok(hi) && hi < 1e10) hi *= 2;
+  if (!ok(hi)) return null;
+  let lo = 0;
+  for (let k = 0; k < 60 && hi - lo > 1; k++) { const mid = (lo + hi) / 2; if (ok(mid)) hi = mid; else lo = mid; }
+  return Math.ceil(hi / 100) * 100;
+}
 </script>
 
 <script>
@@ -428,6 +542,7 @@ const DEFAULT = {
   year: "2026", other: "", invest: "", key: "", infl: "6", withheld: "",
   deposits: [{ bank: "", product: "", name: "", sum: "1 000 000", rate: "14", months: "12", cap: true, manual: "" }],
   bAmount: "", bMonths: "12", bCond: false, fAmount: "", fRate: "", fYears: "5", fKey: "",
+  lMonthly: "", lRate: "", lOther: "", gStart: "", gAdd: "", gYears: "", gGoal: "",
 };
 let LIVE = null, OFFERS = [];
 let state = load();
@@ -507,7 +622,9 @@ function renderYears() {
   $("years").querySelectorAll("input").forEach(r => r.addEventListener("change", () => { state.year = r.value; update(); }));
 }
 const FIELDS = [["other", "other"], ["invest", "invest"], ["key", "key"], ["infl", "infl"], ["withheld", "withheld"],
-  ["b-amount", "bAmount"], ["b-months", "bMonths"], ["f-amount", "fAmount"], ["f-rate", "fRate"], ["f-years", "fYears"], ["f-key", "fKey"]];
+  ["b-amount", "bAmount"], ["b-months", "bMonths"], ["f-amount", "fAmount"], ["f-rate", "fRate"], ["f-years", "fYears"], ["f-key", "fKey"],
+  ["l-monthly", "lMonthly"], ["l-rate", "lRate"], ["l-other", "lOther"],
+  ["g-start", "gStart"], ["g-add", "gAdd"], ["g-years", "gYears"]];
 function bindParams() {
   for (const [id, k] of FIELDS) {
     $(id).value = state[k] ?? "";
@@ -515,6 +632,7 @@ function bindParams() {
   }
   $("b-cond").checked = !!state.bCond;
   $("b-cond").addEventListener("change", () => { state.bCond = $("b-cond").checked; update(); });
+  document.querySelectorAll('[name="g-goal"]').forEach(x => x.addEventListener("change", () => { state.gGoal = x.value; update(); }));
 }
 
 // ---------- main update
@@ -526,7 +644,7 @@ function update() {
   const def = defaultKeyRate(r.year);
 
   $("other").placeholder = "0";
-  for (const [id, k] of [["other", "other"], ["invest", "invest"], ["withheld", "withheld"], ["b-amount", "bAmount"], ["f-amount", "fAmount"]])
+  for (const [id, k] of [["other", "other"], ["invest", "invest"], ["withheld", "withheld"], ["b-amount", "bAmount"], ["f-amount", "fAmount"], ["l-monthly", "lMonthly"], ["l-other", "lOther"], ["g-start", "gStart"], ["g-add", "gAdd"]])
     $(id).setAttribute("aria-invalid", String(!parseMoney(state[k]).ok));
   const po = parseMoney(state.other);
   $("other-hint").textContent = (!po.ok ? "Не понял число — пиши цифрами, можно «2,5 млн». " : po.value > 0 && /[^\d\s ]/.test(state.other) ? `= ${rubs(po.value)}. ` : "")
@@ -626,6 +744,61 @@ function update() {
 
   renderBest(r);
   renderForecast(r);
+  renderLife(r);
+}
+
+function renderLife(r) {
+  const year = Math.max(2027, +state.year || 2027);
+  const futureKey = blank(state.fKey) ? (LIVE?.key?.current?.rate ?? RULES.KEY_NOW * 100) : num(state.fKey);
+  // the allowance for years with an unknown key rate comes from "key rate in the future"
+  const keyRate = defaultKeyRate(year).known ? undefined : futureKey;
+  const best = OFFERS.length ? compareOffers(OFFERS, { amount: 1e6, months: 12, year })[0] : null;
+  const defRate = best ? best.rate : futureKey;
+  const rate = blank(state.lRate) ? defRate : num(state.lRate);
+  $("l-rate").placeholder = fmt(defRate, 2).replace(/,00$/, "");
+  $("l-rate-hint").textContent = best && blank(state.lRate)
+    ? `Лучшая без условий на год: ${best.bank}, «${best.name}», до ${fmt(best.rate, 2).replace(/,00$/, "")}%. Проценты каждый месяц, без капитализации`
+    : "Проценты каждый месяц, без капитализации";
+  const monthly = blank(state.lMonthly) ? 100000 : money(state.lMonthly);
+  const base = { monthly, rate, inflation: state.infl, year, other: state.lOther, invest: state.invest, keyRate };
+  const spend = liveOnInterest({ ...base, preserve: false }), keep = liveOnInterest({ ...base, preserve: true });
+  const infl = num(state.infl) / 100;
+
+  $("l-cmp").innerHTML = `
+    <div><span class="sub">Тратить все проценты</span><b>${spend.possible ? rubs(spend.capital) : "не получится"}</b>
+      <span class="hint">Через 10 лет ${rubs(monthly)} купят как сегодня ${rubs(monthly / Math.pow(1 + infl, 10))}</span></div>
+    <div><span class="sub">Не беднеть от инфляции ${pct(infl, 1)}</span><b>${keep.possible ? rubs(keep.capital) : "не получится"}</b>
+      <span class="hint">${keep.possible ? `Каждый год докладываешь ${pct(infl, 1)} от вклада — доход растёт вместе с ценами` : "Ставка после налога не выше инфляции"}</span></div>`;
+
+  const x = keep.possible ? keep : spend;
+  $("l-table").innerHTML = x.possible ? [
+    [`Вклад (${keep.possible ? "не беднеть" : "тратить всё"})`, rubs(x.capital), 1],
+    [`Проценты в год при ${fmt(rate, 2).replace(/,00$/, "")}%`, rubs(x.interest)],
+    ["Льгота без налога", rubs(x.free)],
+    [`НДФЛ за ${year} год`, "− " + rubs(x.tax)],
+    ...(x.reinvest ? [["Докладываешь на инфляцию", "− " + rubs(x.reinvest)]] : []),
+    ["На руки в месяц", rubs(x.monthly), 1],
+  ].map(t => `<tr${t[2] ? ' class="strong"' : ""}><td>${t[0]}</td><td class="r">${t[1]}</td></tr>`).join("") : "";
+
+  // fixed rates hold only for the deposit term; show what happens after it
+  const drops = [...new Set([rate - 2, rate - 4, futureKey].map(v => Math.round(v * 100) / 100))].filter(v => v > 0 && v < rate).sort((a, b) => b - a);
+  $("l-drop").innerHTML = drops.length ? `<thead><tr><th>Ставка</th><th class="r">Тратить всё</th><th class="r">Не беднеть</th></tr></thead><tbody>` +
+    drops.map(v => {
+      const a = liveOnInterest({ ...base, rate: v, preserve: false }), b = liveOnInterest({ ...base, rate: v, preserve: true });
+      return `<tr><td>${fmt(v, 2).replace(/,00$/, "")}%${Math.abs(v - futureKey) < 0.005 ? ' <span class="pill">ключевая</span>' : ""}</td><td class="r">${a.possible ? fmtMln(a.capital) : "—"}</td><td class="r">${b.possible ? fmtMln(b.capital) : "—"}</td></tr>`;
+    }).join("") + "</tbody>" : `<tr><td class="sub">Ставка и так ниже ключевой</td></tr>`;
+
+  const mine = r.items.reduce((s, i) => s + i.principal, 0);
+  renderGoal({ ...base, futureKey, mine, spendOk: spend.possible, keepOk: keep.possible });
+  if (mine > 0) {
+    const a = incomeFrom(mine, { ...base, preserve: false }), b = incomeFrom(mine, { ...base, preserve: true });
+    $("l-mine").innerHTML = `Твои вклады из блока 1 (${rubs(mine)}) при ${fmt(rate, 2).replace(/,00$/, "")}% дают <b>${rubs(a.monthly)}</b> в месяц после налога`
+      + (b.monthly > 0 ? `, а если не беднеть — <b>${rubs(b.monthly)}</b>.` : ", но инфляцию ставка не перекрывает.");
+  } else $("l-mine").innerHTML = "";
+
+  $("l-note").innerHTML = `Налог по правилам ${year} года (с 2027 — шкала поверх других доходов): жить на проценты — это надолго.
+    Ставка по вкладу фиксирована только на срок, потом будет новая — смотри «Если ставка упадёт». АСВ страхует до 1,4 млн ₽ на банк, большую сумму разумно делить.
+    Ориентир, а не рекомендация, куда вкладывать.`;
 }
 
 function renderBest(r) {
@@ -663,6 +836,39 @@ function renderForecast(r) {
     `<tr class="strong"><td>Итого</td><td class="r m-hide"></td><td class="r">${rubs(tax)}</td><td class="r">${rubs(last.capital)}</td><td class="r ${last.real < amount ? "up" : "down"}">${rubs(last.real)}</td></tr></tbody>`;
 }
 
+function renderGoal(b) {
+  const goal = state.gGoal || (b.keepOk ? "keep" : "spend");
+  document.querySelectorAll('[name="g-goal"]').forEach(x => { x.checked = x.value === goal; });
+  const start = blank(state.gStart) ? b.mine : money(state.gStart);
+  const add = blank(state.gAdd) ? 50000 : money(state.gAdd);
+  const years = blank(state.gYears) ? 15 : Math.max(1, Math.min(50, Math.round(num(state.gYears))));
+  $("g-start").placeholder = fmt(b.mine);
+  const o = { start, add, rate: b.rate, inflation: state.infl, monthly: b.monthly, preserve: goal === "keep", year0: 2026,
+    otherWork: state.other, otherLife: state.lOther, invest: state.invest, futureKey: b.futureKey, maxYears: 50 };
+  const res = yearsToGoal(o);
+  $("g-label").textContent = `Чтобы ${rubs(b.monthly)} в месяц в сегодняшних деньгах и ${goal === "keep" ? "не беднеть" : "тратить все проценты"}`;
+  if (goal === "keep" ? !b.keepOk : !b.spendOk) {
+    $("g-out").textContent = "не получится"; $("g-need").textContent = "При этой ставке цель недостижима — смотри вариант «тратить все» или ставку выше.";
+    $("g-chart").innerHTML = ""; return;
+  }
+  $("g-out").textContent = res.reached ? (res.years === 0 ? "уже хватает" : `≈ ${res.years} ${plural(res.years, "год", "года", "лет")} — к ${res.year}`) : "за 50 лет не выйдет";
+  const need = addForYears(o, years);
+  const last = res.rows.at(-1);
+  $("g-need").innerHTML = (res.reached && res.years > 0 ? `К ${res.year} году будет ${fmtMln(last.capital)}, нужно ${fmtMln(last.target)}. ` : "")
+    + (need === null ? `За ${years} ${plural(years, "год", "года", "лет")} не успеть ни при каком взносе.`
+      : need === 0 ? `За ${years} ${plural(years, "год", "года", "лет")} хватит и без взносов.`
+      : `Чтобы успеть за ${years} ${plural(years, "год", "года", "лет")}, докладывай <b>${rubs(need)}</b> в месяц.`);
+  const rows = res.rows.slice(0, Math.max(res.rows.length, 2));
+  drawLines($("g-chart"), rows.slice(1).map(x => x.year), [
+    { v: rows.map(x => x.capital), color: "var(--accent)" },
+    { v: rows.map(x => x.target), color: "var(--gold)", dash: "5 4" },
+  ], { money: true, first: "сейчас" });
+}
+function plural(n, one, few, many) {
+  const a = n % 10, b = n % 100;
+  return a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 12 || b > 14) ? few : many;
+}
+
 // ---------- charts (inline SVG, no libraries)
 function drawLines(svg, labels, series, opt = {}) {
   const W = +svg.viewBox.baseVal.width, H = +svg.viewBox.baseVal.height;
@@ -671,11 +877,11 @@ function drawLines(svg, labels, series, opt = {}) {
   if (!all.length) { svg.innerHTML = ""; return; }
   let lo = Math.min(...all), hi = Math.max(...all);
   if (hi - lo < 1e-9) { hi += 1; lo -= 1; }
-  const pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+  const pad = (hi - lo) * 0.08; lo = opt.money && lo >= 0 ? Math.max(0, lo - pad) : lo - pad; hi += pad;
   const n = Math.max(...series.map(s => s.v.length));
   const x = i => padL + (W - padL - padR) * (n === 1 ? 0.5 : i / (n - 1));
   const y = v => padT + (H - padT - padB) * (1 - (v - lo) / (hi - lo));
-  const lab = v => opt.money ? (Math.abs(v) >= 1e6 ? fmt(v / 1e6, 1) + " млн" : fmt(v / 1e3, 0) + " тыс") : fmt(v, 1) + "%";
+  const lab = v => opt.money ? (Math.abs(v) < 1 ? "0" : Math.abs(v) >= 1e6 ? fmt(v / 1e6, 1) + " млн" : fmt(v / 1e3, 0) + " тыс") : fmt(v, 1) + "%";
   let g = "";
   for (let k = 0; k <= 3; k++) {
     const v = lo + (hi - lo) * k / 3, yy = y(v);

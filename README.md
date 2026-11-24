@@ -6,7 +6,7 @@ A calculator of Russian personal income tax (NDFL) on bank deposit interest, wit
 bank deposit offers and the Bank of Russia key rate are collected every day by a GitHub Actions job.
 It handles several deposits with one shared tax-free allowance, compares the 2025–2026 rules with the
 new 2027 rules (the interest rate step depends on your salary), ranks bank offers by income **after tax**,
-and forecasts capital over 1–10 years. No libraries, works offline with built-in rules.
+forecasts capital over 1–10 years, and tells how much you need on deposit to live on the interest after tax and inflation. No libraries, works offline with built-in rules.
 
 ---
 
@@ -16,7 +16,8 @@ and forecasts capital over 1–10 years. No libraries, works offline with built-
 2. **Итог** — НДФЛ, льгота, ступени шкалы, что удержит банк и что доначислит ФНС, старые правила против новых, доходность после налога и инфляции.
 3. **Куда положить выгоднее** — предложения банков для твоей суммы и срока, отсортированные по доходу на руки с учётом твоей зарплаты и уже использованной льготы.
 4. **Прогноз капитала** — по годам, с налогом по правилам каждого года, в номинале и в сегодняшних деньгах.
-5. **Что изменилось** — ключевая ставка, дата заседания ЦБ, максимальная ставка топ-10 банков, статус законопроекта 617-9, новости.
+5. **Жить на проценты** — сколько держать на вкладе, чтобы получать N ₽ в месяц после налога: тратить все проценты или не беднеть от инфляции, что будет при падении ставки, сколько дают твои вклады и за сколько лет накопишь при ежемесячном пополнении.
+6. **Что изменилось** — ключевая ставка, дата заседания ЦБ, максимальная ставка топ-10 банков, статус законопроекта 617-9, новости.
 
 ## Правила
 

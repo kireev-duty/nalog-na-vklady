@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs";
 
 const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
 const code = html.match(/<script id="core">([\s\S]*?)<\/script>/)[1];
-const { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney } =
-  new Function(code + "; return { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney };")();
+const { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney, liveOnInterest, incomeFrom, yearsToGoal, addForYears } =
+  new Function(code + "; return { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney, liveOnInterest, incomeFrom, yearsToGoal, addForYears };")();
 const { summarizeKey } = await import("./scripts/sources/cbr.mjs");
 const { parseBill } = await import("./scripts/sources/news.mjs");
 const { parseCards } = await import("./scripts/sources/banks.mjs");
@@ -130,6 +130,39 @@ for (const [txt, want] of [["1 000 000", 1e6], ["1000000", 1e6], ["1 млн", 1e
 }
 for (const bad of ["abc", "1 млн руб еще", "12-3", "--5"]) if (parseMoney(bad).ok) { fails++; console.log(`FAIL money bad "${bad}"`); }
 eq("calc with '1,5 млн'", calc({ year: 2026, deposits: [{ sum: "1,5 млн", rate: "12", months: 12, cap: false }] }).interest, 180000);
+
+// --- live on interest (2027 rules, allowance 160k)
+let lv = liveOnInterest({ monthly: 10000, rate: 12, year: 2027 });
+eq("live no tax", lv.capital, 1e6); eq("live no tax 0", lv.tax, 0);
+// 100k/month: 0.87·G + 20 800 = 1 200 000 → G = 1 355 402.30 → C = G / 0.12
+lv = liveOnInterest({ monthly: 100000, rate: 12, year: 2027 });
+eq("live 100k", lv.capital, 1355402.3 / 0.12, 1000); eq("live 100k net", lv.monthly >= 100000 ? 1 : 0, 1);
+eq("live salary raises capital", liveOnInterest({ monthly: 100000, rate: 12, year: 2027, other: 3e6 }).capital > lv.capital ? 1 : 0, 1);
+eq("live impossible", liveOnInterest({ monthly: 50000, rate: 5, inflation: 6, year: 2027, preserve: true }).possible ? 0 : 1, 1);
+const lk = liveOnInterest({ monthly: 100000, rate: 12, inflation: 5, year: 2027, preserve: true });
+eq("live preserve > spend", lk.capital > lv.capital ? 1 : 0, 1); eq("live preserve net", lk.monthly >= 100000 ? 1 : 0, 1);
+eq("live preserve tight", incomeFrom(lk.capital - 2000, { rate: 12, inflation: 5, year: 2027, preserve: true }).monthly < 100000 ? 1 : 0, 1);
+let prev = 0;
+for (const m of [5e3, 3e4, 1e5, 3e5, 1e6, 5e6]) {
+  const c = liveOnInterest({ monthly: m, rate: 14, inflation: 6, year: 2027, other: 2e6, preserve: true }).capital;
+  if (!(c > prev)) { fails++; console.log(`FAIL live monotone ${m}`); } prev = c; n++;
+}
+
+// --- years to goal: 5 000/month at 10% → target 600 000 (inside the allowance, no tax, no inflation)
+const g0 = { rate: 10, monthly: 5000, inflation: 0, year0: 2027 };
+const ann = a => a * [...Array(12)].reduce((s, _, k) => s + (1 + 0.1 / 12) ** (k + 1), 0);
+let gy = yearsToGoal({ ...g0, start: 0, add: 20000 });
+eq("goal year1 annuity", gy.rows[1].capital, ann(20000), 0.01); eq("goal target", gy.rows[1].target, 600000);
+eq("goal 20k years", gy.years, 3); eq("goal 50k years", yearsToGoal({ ...g0, add: 50000 }).years, 1);
+eq("goal already", yearsToGoal({ ...g0, start: 7e5 }).years, 0);
+eq("goal never", yearsToGoal({ ...g0, start: 0, add: 0 }).reached ? 1 : 0, 0);
+const g1 = { rate: 14, monthly: 100000, inflation: 6, preserve: true, year0: 2026, otherWork: 2e6, futureKey: 12, start: 1e6 };
+eq("goal more add fewer years", yearsToGoal({ ...g1, add: 100000 }).years < yearsToGoal({ ...g1, add: 50000 }).years ? 1 : 0, 1);
+const need10 = addForYears(g1, 10);
+eq("addForYears reaches", yearsToGoal({ ...g1, add: need10 }).years <= 10 ? 1 : 0, 1);
+eq("addForYears tight", yearsToGoal({ ...g1, add: need10 - 1000, maxYears: 10 }).reached ? 0 : 1, 1);
+eq("addForYears zero", addForYears({ ...g0, start: 7e5 }, 5), 0);
+eq("addForYears impossible", addForYears({ ...g1, rate: 5 }, 10) === null ? 1 : 0, 1);
 
 console.log(fails ? `${fails} of ${n} failed` : `all ${n} checks passed`);
 process.exit(fails ? 1 : 0);

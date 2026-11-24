@@ -95,6 +95,18 @@ summary{cursor:pointer;font-weight:600}
 @media (max-width:760px){.two{grid-template-columns:1fr}}
 .up{color:var(--bad)}.down{color:var(--good)}
 footer{color:var(--muted);font-size:.85rem;margin-top:24px;line-height:1.6}
+.gauge{height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.gauge i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
+.gauge-txt{font-size:.85rem;margin-top:4px}
+.zero{margin:8px 0 0;font-size:.92rem}
+button.link{min-height:32px;padding:4px 10px;margin-left:4px;border-color:var(--gold);background:none;color:inherit;font-weight:600}
+.flash{animation:flash .9s ease-out}
+@keyframes flash{from{background:var(--accent-soft);border-radius:8px}to{background:transparent}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}.gauge i{transition:none}}
+.dep.is-manual [data-k="sum"],.dep.is-manual [data-k="rate"],.dep.is-manual [data-k="months"]{opacity:.5}
+input[aria-invalid="true"]{border-color:var(--bad);background:var(--bad-soft)}
+.dep .warn-txt{color:var(--bad);font-size:.85rem}
+.dep .man-txt{color:var(--gold);font-size:.85rem;font-weight:600}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
@@ -150,6 +162,8 @@ footer{color:var(--muted);font-size:.85rem;margin-top:24px;line-height:1.6}
       <div class="sub" id="res-label">НДФЛ с процентов</div>
       <div class="total" id="res-tax">0 ₽</div>
       <div id="res-pills"></div>
+      <div id="res-gauge" style="margin-top:12px"></div>
+      <div id="res-salary"></div>
       <div id="res-cmp" style="margin-top:14px"></div>
     </div>
     <div>
@@ -236,6 +250,32 @@ function num(x) {
   const v = parseFloat(String(x ?? "").replace(/\s| /g, "").replace(",", "."));
   return isFinite(v) ? v : 0;
 }
+// Money as people type it: "1 500 000", "1,5 млн", "150к", "1.000.000", "1,000,000", "293 335,02 ₽".
+// Returns {value, ok}; empty → {value: 0, ok: true}.
+function parseMoney(x) {
+  if (typeof x === "number") return { value: isFinite(x) ? x : 0, ok: isFinite(x) };
+  let s = String(x ?? "").toLowerCase().replace(/[\s  ]/g, "").replace(/₽|руб(?:лей|ля|ль)?\.?|р\.$/g, "");
+  if (!s) return { value: 0, ok: true };
+  let mult = 1;
+  const m = s.match(/(млрд|млн|миллион(?:ов|а)?|м|m|тыс(?:яч[аи]?)?\.?|т|к|k)$/);
+  if (m) { s = s.slice(0, -m[0].length); mult = /^(млрд)/.test(m[1]) ? 1e9 : /^(млн|миллион|м|m)/.test(m[1]) ? 1e6 : 1e3; }
+  if (!/^-?\d[\d.,]*$/.test(s)) return { value: 0, ok: false };
+  const dots = (s.match(/\./g) || []).length, commas = (s.match(/,/g) || []).length;
+  if (dots && commas) {
+    // the last separator is the decimal one
+    const dec = s.lastIndexOf(".") > s.lastIndexOf(",") ? "." : ",";
+    s = s.split(dec === "." ? "," : ".").join("").replace(dec, ".");
+  } else if (dots + commas > 1) {
+    s = s.replace(/[.,]/g, ""); // 1.000.000 or 1,000,000
+  } else if (dots + commas === 1) {
+    const [a, b] = s.split(/[.,]/);
+    // "150,000" / "1.000" without a multiplier are thousands, "1,5" / "150 000,50" are decimals
+    s = mult === 1 && b.length === 3 && !/^-?0$/.test(a) ? a + b : a + "." + b;
+  }
+  const v = parseFloat(s) * mult;
+  return isFinite(v) ? { value: v, ok: true } : { value: 0, ok: false };
+}
+const money = x => parseMoney(x).value;
 const r2 = x => Math.round(x * 100) / 100;
 const rub = x => Math.floor(x + 0.5); // п. 6 ст. 52 НК: < 50 коп. drop, ≥ 50 коп. round up
 const blank = v => v === undefined || v === null || String(v).trim() === "";
@@ -271,19 +311,19 @@ function slices(start, amount, scale) {
 }
 
 function depositInterest(d) {
-  if (!blank(d.manual)) return num(d.manual);
-  const P = num(d.sum), r = num(d.rate) / 100, m = Math.max(0, Math.min(12, num(d.months)));
+  if (!blank(d.manual)) return money(d.manual);
+  const P = money(d.sum), r = num(d.rate) / 100, m = Math.max(0, Math.min(12, num(d.months)));
   return d.cap ? P * (Math.pow(1 + r / 12, m) - 1) : P * r * m / 12;
 }
 
 function calc(input) {
   const year = Math.round(num(input.year)) || 2026;
-  const other = Math.max(0, num(input.other));
-  const invest = Math.max(0, num(input.invest));
+  const other = Math.max(0, money(input.other));
+  const invest = Math.max(0, money(input.invest));
   const def = defaultKeyRate(year);
   const keyRate = blank(input.keyRate) ? def.rate : num(input.keyRate) / 100;
   const items = (input.deposits || []).map(d => ({
-    name: d.name || "", principal: Math.max(0, num(d.sum)), months: Math.max(0, Math.min(12, num(d.months))),
+    name: d.name || "", principal: Math.max(0, money(d.sum)), months: Math.max(0, Math.min(12, num(d.months))),
     manual: !blank(d.manual), interest: r2(Math.max(0, depositInterest(d))),
   }));
   const interest = r2(items.reduce((s, i) => s + i.interest, 0));
@@ -299,7 +339,7 @@ function calc(input) {
 
   const tax = rub(isNew ? newRaw : oldRaw);
   const steps = isNew ? slices(below, base, RULES.SCALE) : slices(invest, base, RULES.OLD);
-  const bank = isNew ? rub(base * RULES.BANK_RATE) : Math.max(0, num(input.withheld));
+  const bank = isNew ? rub(base * RULES.BANK_RATE) : Math.max(0, money(input.withheld));
   const fnsExtra = Math.max(0, tax - bank);
 
   const scale = isNew ? RULES.SCALE : RULES.OLD;
@@ -336,17 +376,17 @@ function calc(input) {
 
 // Compare bank offers for one amount and term: extra tax is counted on top of the interest you already have.
 function compareOffers(offers, o) {
-  const amount = Math.max(0, num(o.amount)), months = Math.max(1, num(o.months) || 12);
+  const amount = Math.max(0, money(o.amount)), months = Math.max(1, num(o.months) || 12);
   const days = months * 30.4, infl = num(o.inflation) / 100;
   const base = { year: o.year, other: o.other, invest: o.invest, keyRate: o.keyRate };
-  const t0 = calc({ ...base, deposits: [{ manual: num(o.baseInterest) }] }).tax;
+  const t0 = calc({ ...base, deposits: [{ manual: money(o.baseInterest) }] }).tax;
   const out = [];
   for (const x of offers || []) {
     if (x.cond && !o.includeCond) continue;
     if (x.minSum && amount < x.minSum) continue;
     if (x.termDays && (days < x.termDays.from - 5 || days > x.termDays.to + 5)) continue;
     const interest = r2(amount * x.rate / 100 * months / 12);
-    const tax = calc({ ...base, deposits: [{ manual: num(o.baseInterest) + interest }] }).tax - t0;
+    const tax = calc({ ...base, deposits: [{ manual: money(o.baseInterest) + interest }] }).tax - t0;
     const net = interest - tax;
     const netYield = amount > 0 ? net / amount * 12 / months : 0;
     out.push({ ...x, interest, tax, net, netYield, real: (1 + netYield) / (1 + infl) - 1 });
@@ -358,7 +398,7 @@ function compareOffers(offers, o) {
 function forecast(o) {
   const years = Math.max(1, Math.min(30, Math.round(num(o.years) || 1)));
   const rate = num(o.rate) / 100, infl = num(o.inflation) / 100, y0 = Math.round(num(o.year0)) || 2026;
-  let cap = Math.max(0, num(o.amount)), noTax = cap;
+  let cap = Math.max(0, money(o.amount)), noTax = cap;
   const rows = [];
   for (let i = 0; i < years; i++) {
     const year = y0 + i;
@@ -377,6 +417,7 @@ function forecast(o) {
 const $ = id => document.getElementById(id);
 const fmt = (x, d = 0) => (Math.round(x * 10 ** d) / 10 ** d).toLocaleString("ru-RU", { minimumFractionDigits: d, maximumFractionDigits: d });
 const rubs = x => fmt(x) + " ₽";
+const fmtMln = x => x >= 1e6 ? fmt(x / 1e6, 2).replace(/,?0+$/, "") + " млн ₽" : rubs(Math.round(x / 1000) * 1000);
 const pct = (x, d = 1) => fmt(x * 100, d) + "%";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const safeUrl = u => /^https?:\/\//.test(String(u || "")) ? esc(u) : "#";
@@ -425,7 +466,8 @@ function depRow(d, i) {
     <div class="c2"><label for="p${i}">Проценты точно, ₽</label><input id="p${i}" data-k="manual" inputmode="decimal" placeholder="если знаешь" autocomplete="off"></div>
     <div class="foot">
       <label class="chk"><input type="checkbox" data-k="cap"> Капитализация ежемесячно</label>
-      <span><span class="sub">проценты:</span> <span class="out" data-out="int"></span></span>
+      <span data-out="calc"></span>
+      <span data-out="man" hidden><span class="man-txt">Считается по точным процентам — сумма и ставка не учитываются</span> <button type="button" class="link" data-act="clear-manual">Очистить</button></span>
       <span class="sub" data-out="cond"></span>
       <button type="button" class="ghost" aria-label="Удалить вклад ${i + 1}">Удалить</button>
     </div>`;
@@ -446,6 +488,9 @@ function depRow(d, i) {
       el.querySelector('[data-k="cap"]').checked = d.cap;
     }
     update();
+  });
+  el.querySelector('[data-act="clear-manual"]').addEventListener("click", () => {
+    d.manual = ""; el.querySelector('[data-k="manual"]').value = ""; update(); el.querySelector('[data-k="sum"]').focus();
   });
   el.querySelector(".ghost").addEventListener("click", () => { state.deposits.splice(i, 1); renderDeps(); update(); });
   return el;
@@ -481,7 +526,11 @@ function update() {
   const def = defaultKeyRate(r.year);
 
   $("other").placeholder = "0";
-  $("other-hint").textContent = r.isNew ? "Нужна: проценты ложатся на шкалу поверх неё. Налог с зарплаты не меняется" : "В 2025–2026 на налог с процентов не влияет";
+  for (const [id, k] of [["other", "other"], ["invest", "invest"], ["withheld", "withheld"], ["b-amount", "bAmount"], ["f-amount", "fAmount"]])
+    $(id).setAttribute("aria-invalid", String(!parseMoney(state[k]).ok));
+  const po = parseMoney(state.other);
+  $("other-hint").textContent = (!po.ok ? "Не понял число — пиши цифрами, можно «2,5 млн». " : po.value > 0 && /[^\d\s ]/.test(state.other) ? `= ${rubs(po.value)}. ` : "")
+    + (r.isNew ? "Нужна: проценты ложатся на шкалу поверх неё. Налог с зарплаты не меняется" : "В 2025–2026 на налог с процентов не влияет");
   $("key").placeholder = fmt(def.rate * 100, 2).replace(/,00$/, "");
   const km = LIVE?.key?.maxByYear?.[def.of];
   $("key-hint").textContent = def.known
@@ -491,16 +540,46 @@ function update() {
 
   document.querySelectorAll(".dep").forEach((el, i) => {
     const it = r.items[i], d = state.deposits[i];
-    el.querySelector('[data-out="int"]').textContent = it ? rubs(it.interest) : "";
+    const isMan = !blank(d?.manual), ps = parseMoney(d?.sum), pm = parseMoney(d?.manual);
+    el.classList.toggle("is-manual", isMan);
+    el.querySelector('[data-out="man"]').hidden = !isMan;
+    el.querySelector('[data-k="sum"]').setAttribute("aria-invalid", String(!ps.ok));
+    el.querySelector('[data-k="manual"]').setAttribute("aria-invalid", String(!pm.ok));
+    const bad = isMan ? !pm.ok : !ps.ok;
+    el.querySelector('[data-out="calc"]').innerHTML = bad
+      ? `<span class="warn-txt">Не понял ${isMan ? "проценты" : "сумму"} — пиши цифрами, можно «1,5 млн» или «150к»</span>`
+      : isMan ? `<span class="sub">проценты:</span> <span class="out">${rubs(it?.interest || 0)}</span>`
+      : `<span class="sub">${rubs(it?.principal || 0)} × ${fmt(num(d?.rate), 2).replace(/,00$/, "")}% × ${fmt(it?.months || 0)} мес. → проценты:</span> <span class="out">${rubs(it?.interest || 0)}</span>`;
     const o = (LIVE?.banks || []).find(x => x.id === d?.bank)?.offers?.[+d?.product];
     el.querySelector('[data-out="cond"]').textContent = o?.cond ? "ставка с условиями — проверь на сайте банка" : "";
   });
 
   $("res-label").textContent = `НДФЛ с процентов за ${r.year} год`;
-  $("res-tax").textContent = rubs(r.tax);
+  const taxEl = $("res-tax"), taxTxt = rubs(r.tax);
+  if (taxEl.textContent !== taxTxt) { taxEl.textContent = taxTxt; taxEl.classList.remove("flash"); void taxEl.offsetWidth; taxEl.classList.add("flash"); }
   $("res-pills").innerHTML = r.base === 0
     ? `<span class="pill">в пределах льготы — налога нет</span>`
     : `<span class="pill${r.effRate > 0.13 ? " warn" : ""}">ставка ${pct(r.effRate, 2)} с облагаемой части</span>`;
+
+  // how much of the allowance is used and where the tax starts
+  const used = r.free > 0 ? Math.min(1, r.interest / r.free) : 1;
+  let gauge = `<div class="gauge" role="img" aria-label="Льгота использована на ${Math.round(used * 100)}%"><i style="width:${(used * 100).toFixed(1)}%"></i></div>
+    <div class="sub gauge-txt">Льгота ${rubs(r.free)}: использовано ${rubs(Math.min(r.interest, r.free))} (${Math.round(used * 100)}%)</div>`;
+  if (r.base === 0) {
+    const g = r.yld?.gross;
+    gauge += `<p class="zero">Налог появится, когда проценты за год превысят <b>${rubs(r.free)}</b>${r.interest > 0 ? ` — ещё ${rubs(r.freeLeft)}` : ""}.`
+      + (g > 0 ? ` При твоей доходности ${pct(g, 2)} это вклады примерно от <b>${fmtMln(r.free / g)}</b> на весь год.` : "") + `</p>`;
+  }
+  $("res-gauge").innerHTML = gauge;
+
+  // salary in 2025–2026 does not matter — say it loudly and show 2027
+  const sal = money(state.other);
+  const r27 = !r.isNew && sal > 0 ? calc({ ...input, year: 2027, keyRate: "" }) : null;
+  if (r27 && (r.base > 0 || r27.tax > 0)) {
+    $("res-salary").innerHTML = `<div class="note">В ${r.year} году зарплата на налог с процентов <b>не влияет</b> — так по закону, поэтому итог не меняется.
+      С 2027 года при такой зарплате и тех же процентах налог был бы <b>${rubs(r27.tax)}</b>. <button type="button" class="link" id="to2027">Посчитать за 2027</button></div>`;
+    $("to2027").addEventListener("click", () => { state.year = "2027"; renderYears(); update(); $("res-tax").scrollIntoView({ block: "center", behavior: "smooth" }); });
+  } else $("res-salary").innerHTML = "";
 
   const rows = [["Проценты за год, всего", rubs(r.interest)], [`Льгота: 1 млн × ${pct(r.keyRate, 2)}`, "− " + rubs(r.free)], ["Облагается", rubs(r.base), 1]];
   for (const s of r.steps) rows.push([`&nbsp;&nbsp;из них по ${pct(s.rate, 0)}`, rubs(s.amount)]);
@@ -514,13 +593,14 @@ function update() {
   $("res-table").innerHTML = rows.map(x => `<tr${x[2] ? ' class="strong"' : ""}><td>${x[0]}</td><td class="r">${x[1]}</td></tr>`).join("");
 
   const d = r.newTax - r.oldTax;
-  $("res-cmp").innerHTML = r.base > 0 ? `
+  $("res-cmp").innerHTML = `
     <div class="cmp">
       <div><span class="sub">2025–2026: отдельно от зарплаты</span><b>${rubs(r.oldTax)}</b></div>
       <div><span class="sub">с 2027: поверх зарплаты</span><b>${rubs(r.newTax)}</b></div>
     </div>
-    <p class="sub" style="margin:8px 0 0">${d === 0 ? "Разницы нет: всё укладывается в 13%." :
-      `Новые правила дороже на <b class="up">${rubs(d)}</b> в год — только налог с процентов, налог с зарплаты не меняется.`}</p>` : "";
+    <p class="sub" style="margin:8px 0 0">${r.base === 0 ? "Проценты в пределах льготы — налога нет ни по старым, ни по новым правилам. Зарплата начнёт влиять, только когда проценты превысят льготу."
+      : d === 0 ? (sal > 0 ? "Разницы нет: вместе с зарплатой всё укладывается в 13%." : "Разницы нет: всё укладывается в 13%. Введи зарплату в блоке 2 — с 2027 она может поднять ставку.")
+      : `Новые правила дороже на <b class="up">${rubs(d)}</b> в год — только налог с процентов, налог с зарплаты не меняется.`}</p>`;
 
   if (r.yld) {
     $("res-yield").innerHTML = `<table style="margin-top:10px">
@@ -549,7 +629,7 @@ function update() {
 }
 
 function renderBest(r) {
-  const amount = blank(state.bAmount) ? Math.max(100000, r.items.reduce((s, i) => s + i.principal, 0)) : num(state.bAmount);
+  const amount = blank(state.bAmount) ? Math.max(100000, r.items.reduce((s, i) => s + i.principal, 0)) : money(state.bAmount);
   $("b-amount").placeholder = fmt(amount);
   if (!OFFERS.length) { $("b-table").innerHTML = ""; $("b-hint").textContent = "Ставки банков подгружаются из интернета — сейчас их нет."; return; }
   const list = compareOffers(OFFERS, { amount, months: state.bMonths, year: state.year, other: state.other, invest: state.invest,
@@ -565,7 +645,7 @@ function renderBest(r) {
 }
 
 function renderForecast(r) {
-  const amount = blank(state.fAmount) ? Math.max(100000, r.items.reduce((s, i) => s + i.principal, 0)) : num(state.fAmount);
+  const amount = blank(state.fAmount) ? Math.max(100000, r.items.reduce((s, i) => s + i.principal, 0)) : money(state.fAmount);
   const wRate = r.items.length ? state.deposits.reduce((s, d, i) => s + num(d.rate) * (r.items[i]?.principal || 0), 0) / Math.max(1, r.items.reduce((s, i) => s + i.principal, 0)) : 0;
   const rate = blank(state.fRate) ? (wRate || 12) : num(state.fRate);
   const futureKey = blank(state.fKey) ? (LIVE?.key?.current?.rate ?? RULES.KEY_NOW * 100) : num(state.fKey);

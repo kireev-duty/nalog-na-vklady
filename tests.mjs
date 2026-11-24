@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs";
 
 const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
 const code = html.match(/<script id="core">([\s\S]*?)<\/script>/)[1];
-const { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax } =
-  new Function(code + "; return { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax };")();
+const { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney } =
+  new Function(code + "; return { calc, scaleTax, slices, depositInterest, defaultKeyRate, RULES, compareOffers, forecast, applyKeyMax, parseMoney };")();
 const { summarizeKey } = await import("./scripts/sources/cbr.mjs");
 const { parseBill } = await import("./scripts/sources/news.mjs");
 const { parseCards } = await import("./scripts/sources/banks.mjs");
@@ -119,6 +119,17 @@ const cards = parseCards("Вклады ВТБ-Вклад в рублях Вкл�
   "Вклад «Двойная выгода» для участников ПДС До 18% Ставка, годовых От 30 000 ₽ Подробнее ВТБ-Вклад в юанях До 0,9% Ставка, годовых Подробнее");
 eq("cards n", cards.length, 2); eq("cards rate", cards[0].rate, 13.7); eq("cards min", cards[0].minSum, 10000);
 eq("cards term", cards[0].termDays.to, Math.round(36 * 30.4)); eq("cards cond", cards[1].cond ? 1 : 0, 1);
+
+// --- parseMoney: how people type sums
+for (const [txt, want] of [["1 000 000", 1e6], ["1000000", 1e6], ["1 млн", 1e6], ["1,5 млн", 1.5e6], ["1.5млн", 1.5e6],
+  ["1.000.000", 1e6], ["1,000,000", 1e6], ["150к", 150000], ["150 тыс.", 150000], ["150 тыс. руб.", 150000], ["150000 ₽", 150000],
+  ["150 000,50", 150000.5], ["293335,02", 293335.02], ["1 234 567.89", 1234567.89], ["1.234.567,89", 1234567.89],
+  ["150,000", 150000], ["0,5 млн", 500000], ["2 млрд", 2e9], ["1 000 000", 1e6], ["", 0], [250000, 250000]]) {
+  const p = parseMoney(txt);
+  eq(`money "${txt}"`, p.value, want, 0.001); if (!p.ok) { fails++; console.log(`FAIL money ok "${txt}"`); }
+}
+for (const bad of ["abc", "1 млн руб еще", "12-3", "--5"]) if (parseMoney(bad).ok) { fails++; console.log(`FAIL money bad "${bad}"`); }
+eq("calc with '1,5 млн'", calc({ year: 2026, deposits: [{ sum: "1,5 млн", rate: "12", months: 12, cap: false }] }).interest, 180000);
 
 console.log(fails ? `${fails} of ${n} failed` : `all ${n} checks passed`);
 process.exit(fails ? 1 : 0);

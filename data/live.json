@@ -1,8 +1,8 @@
 {
- "updated": "2026-11-24T14:40:57.588Z",
+ "updated": "2026-11-25T12:30:28.605Z",
  "key": {
   "current": {
-   "date": "2026-11-24",
+   "date": "2026-11-25",
    "rate": 14
   },
   "changes": [
@@ -387,7 +387,7 @@
    "id": "vtb",
    "name": "ВТБ",
    "url": "https://www.vtb.ru/personal/vklady-i-scheta/",
-   "updated": "2026-11-24T14:40:57.588Z",
+   "updated": "2026-11-25T12:30:28.605Z",
    "ok": true,
    "offers": [
     {
@@ -505,7 +505,7 @@
    "id": "gpb",
    "name": "Газпромбанк",
    "url": "https://www.gazprombank.ru/personal/increase/deposits/",
-   "updated": "2026-11-24T14:40:57.588Z",
+   "updated": "2026-11-25T12:30:28.605Z",
    "ok": true,
    "offers": [
     {
@@ -577,7 +577,7 @@
    "id": "tbank",
    "name": "Т-Банк",
    "url": "https://www.tbank.ru/savings/deposit/",
-   "updated": "2026-11-24T14:40:57.588Z",
+   "updated": "2026-11-25T12:30:28.605Z",
    "ok": true,
    "offers": [
     {
@@ -594,7 +594,7 @@
    "id": "rshb",
    "name": "Россельхозбанк",
    "url": "https://www.rshb.ru/natural/deposits/",
-   "updated": "2026-11-24T14:40:57.588Z",
+   "updated": "2026-11-25T12:30:28.605Z",
    "ok": true,
    "offers": [
     {
@@ -673,7 +673,7 @@
    "id": "domrf",
    "name": "Банк ДОМ.РФ",
    "url": "https://domrfbank.ru/deposits/",
-   "updated": "2026-11-24T14:40:57.588Z",
+   "updated": "2026-11-25T12:30:28.605Z",
    "ok": true,
    "offers": [
     {
@@ -693,7 +693,7 @@
    "id": "bspb",
    "name": "Банк Санкт-Петербург",
    "url": "https://www.bspb.ru/retail/deposits",
-   "updated": "2026-11-24T14:40:57.588Z",
+   "updated": "2026-11-25T12:30:28.605Z",
    "ok": true,
    "offers": [
     {
@@ -827,18 +827,18 @@
   ]
  },
  "log": [
-  "ok   cbr top-10",
   "ok   cbr calendar",
+  "ok   cbr top-10",
   "ok   news",
   "ok   bank gpb",
   "ok   bank tbank",
-  "ok   bank vtb",
   "ok   bank domrf",
+  "ok   bank vtb",
   "ok   bank bspb",
   "ok   cbr key rate",
   "ok   bank rshb",
   "FAIL bank uralsib: https://www.uralsib.ru/vklady-scheta/vklady: fetch failed",
-  "FAIL bank akbars: https://www.akbars.ru/individuals/deposits/: UND_ERR_CONNECT_TIMEOUT",
-  "FAIL bill 617-9: https://sozd.duma.gov.ru/bill/617-9: UND_ERR_CONNECT_TIMEOUT"
+  "FAIL bill 617-9: https://sozd.duma.gov.ru/bill/617-9: UND_ERR_CONNECT_TIMEOUT",
+  "FAIL bank akbars: https://www.akbars.ru/individuals/deposits/: UND_ERR_CONNECT_TIMEOUT"
  ]
 }

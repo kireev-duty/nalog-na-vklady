@@ -1,8 +1,8 @@
 {
- "updated": "2026-11-25T12:30:28.605Z",
+ "updated": "2026-11-26T12:10:30.868Z",
  "key": {
   "current": {
-   "date": "2026-11-25",
+   "date": "2026-11-26",
    "rate": 14
   },
   "changes": [
@@ -387,7 +387,7 @@
    "id": "vtb",
    "name": "ВТБ",
    "url": "https://www.vtb.ru/personal/vklady-i-scheta/",
-   "updated": "2026-11-25T12:30:28.605Z",
+   "updated": "2026-11-26T12:10:30.868Z",
    "ok": true,
    "offers": [
     {
@@ -505,7 +505,7 @@
    "id": "gpb",
    "name": "Газпромбанк",
    "url": "https://www.gazprombank.ru/personal/increase/deposits/",
-   "updated": "2026-11-25T12:30:28.605Z",
+   "updated": "2026-11-26T12:10:30.868Z",
    "ok": true,
    "offers": [
     {
@@ -522,7 +522,7 @@
     {
      "name": "Вклад «Новые деньги»",
      "kind": "deposit",
-     "rate": 13.6,
+     "rate": 13.8,
      "minSum": 15000,
      "termDays": {
       "from": 61,
@@ -533,7 +533,7 @@
     {
      "name": "Вклад «Копить»",
      "kind": "deposit",
-     "rate": 12.8,
+     "rate": 13,
      "minSum": 15000,
      "termDays": {
       "from": 30,
@@ -544,7 +544,7 @@
     {
      "name": "Вклад «В Плюсе»",
      "kind": "deposit",
-     "rate": 13.6,
+     "rate": 13.8,
      "minSum": 15000,
      "termDays": {
       "from": 30,
@@ -577,7 +577,7 @@
    "id": "tbank",
    "name": "Т-Банк",
    "url": "https://www.tbank.ru/savings/deposit/",
-   "updated": "2026-11-25T12:30:28.605Z",
+   "updated": "2026-11-26T12:10:30.868Z",
    "ok": true,
    "offers": [
     {
@@ -594,7 +594,7 @@
    "id": "rshb",
    "name": "Россельхозбанк",
    "url": "https://www.rshb.ru/natural/deposits/",
-   "updated": "2026-11-25T12:30:28.605Z",
+   "updated": "2026-11-26T12:10:30.868Z",
    "ok": true,
    "offers": [
     {
@@ -673,7 +673,7 @@
    "id": "domrf",
    "name": "Банк ДОМ.РФ",
    "url": "https://domrfbank.ru/deposits/",
-   "updated": "2026-11-25T12:30:28.605Z",
+   "updated": "2026-11-26T12:10:30.868Z",
    "ok": true,
    "offers": [
     {
@@ -693,7 +693,7 @@
    "id": "bspb",
    "name": "Банк Санкт-Петербург",
    "url": "https://www.bspb.ru/retail/deposits",
-   "updated": "2026-11-25T12:30:28.605Z",
+   "updated": "2026-11-26T12:10:30.868Z",
    "ok": true,
    "offers": [
     {
@@ -827,8 +827,8 @@
   ]
  },
  "log": [
-  "ok   cbr calendar",
   "ok   cbr top-10",
+  "ok   cbr calendar",
   "ok   news",
   "ok   bank gpb",
   "ok   bank tbank",
@@ -837,8 +837,8 @@
   "ok   bank bspb",
   "ok   cbr key rate",
   "ok   bank rshb",
-  "FAIL bank uralsib: https://www.uralsib.ru/vklady-scheta/vklady: fetch failed",
+  "FAIL bank akbars: https://www.akbars.ru/individuals/deposits/: UND_ERR_CONNECT_TIMEOUT",
   "FAIL bill 617-9: https://sozd.duma.gov.ru/bill/617-9: UND_ERR_CONNECT_TIMEOUT",
-  "FAIL bank akbars: https://www.akbars.ru/individuals/deposits/: UND_ERR_CONNECT_TIMEOUT"
+  "FAIL bank uralsib: https://www.uralsib.ru/vklady-scheta/vklady: fetch failed"
  ]
 }

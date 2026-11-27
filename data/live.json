@@ -1,8 +1,8 @@
 {
- "updated": "2026-11-26T12:10:30.868Z",
+ "updated": "2026-11-27T11:58:05.877Z",
  "key": {
   "current": {
-   "date": "2026-11-26",
+   "date": "2026-11-27",
    "rate": 14
   },
   "changes": [
@@ -113,10 +113,6 @@
   "nextMeeting": "2026-12-18"
  },
  "top10": [
-  {
-   "decade": "I.01.2025",
-   "rate": 21.723
-  },
   {
    "decade": "II.01.2025",
    "rate": 21.523
@@ -380,6 +376,10 @@
   {
    "decade": "I.11.2026",
    "rate": 13.305
+  },
+  {
+   "decade": "II.11.2026",
+   "rate": 13.325
   }
  ],
  "banks": [
@@ -387,7 +387,7 @@
    "id": "vtb",
    "name": "ВТБ",
    "url": "https://www.vtb.ru/personal/vklady-i-scheta/",
-   "updated": "2026-11-26T12:10:30.868Z",
+   "updated": "2026-11-27T11:58:05.877Z",
    "ok": true,
    "offers": [
     {
@@ -505,7 +505,7 @@
    "id": "gpb",
    "name": "Газпромбанк",
    "url": "https://www.gazprombank.ru/personal/increase/deposits/",
-   "updated": "2026-11-26T12:10:30.868Z",
+   "updated": "2026-11-27T11:58:05.877Z",
    "ok": true,
    "offers": [
     {
@@ -577,7 +577,7 @@
    "id": "tbank",
    "name": "Т-Банк",
    "url": "https://www.tbank.ru/savings/deposit/",
-   "updated": "2026-11-26T12:10:30.868Z",
+   "updated": "2026-11-27T11:58:05.877Z",
    "ok": true,
    "offers": [
     {
@@ -594,7 +594,7 @@
    "id": "rshb",
    "name": "Россельхозбанк",
    "url": "https://www.rshb.ru/natural/deposits/",
-   "updated": "2026-11-26T12:10:30.868Z",
+   "updated": "2026-11-27T11:58:05.877Z",
    "ok": true,
    "offers": [
     {
@@ -673,7 +673,7 @@
    "id": "domrf",
    "name": "Банк ДОМ.РФ",
    "url": "https://domrfbank.ru/deposits/",
-   "updated": "2026-11-26T12:10:30.868Z",
+   "updated": "2026-11-27T11:58:05.877Z",
    "ok": true,
    "offers": [
     {
@@ -693,7 +693,7 @@
    "id": "bspb",
    "name": "Банк Санкт-Петербург",
    "url": "https://www.bspb.ru/retail/deposits",
-   "updated": "2026-11-26T12:10:30.868Z",
+   "updated": "2026-11-27T11:58:05.877Z",
    "ok": true,
    "offers": [
     {
@@ -788,6 +788,24 @@
  "news": {
   "items": [
    {
+    "date": "2026-11-27",
+    "source": "РИА Новости",
+    "title": "Совфед включил пассивные доходы в основную базу по НДФЛ",
+    "link": "https://ria.ru/20261127/sovfed-2134362096.html"
+   },
+   {
+    "date": "2026-11-27",
+    "source": "Банк России",
+    "title": "Результаты мониторинга максимальных процентных ставок кредитных организаций (27.11.2026)",
+    "link": "https://www.cbr.ru/press/PR/?file=639313833655037811BANK_SECTOR.htm"
+   },
+   {
+    "date": "2026-11-27",
+    "source": "ТАСС",
+    "title": "Максимальная ставка по вкладам в рублях в II декаде ноября выросла до 13,33%",
+    "link": "https://tass.ru/ekonomika/28362229"
+   },
+   {
     "date": "2026-11-24",
     "source": "Госдума",
     "title": "Законопроект 617-9 (налог на вклады): Госдума: третье чтение",
@@ -827,8 +845,8 @@
   ]
  },
  "log": [
-  "ok   cbr top-10",
   "ok   cbr calendar",
+  "ok   cbr top-10",
   "ok   news",
   "ok   bank gpb",
   "ok   bank tbank",
@@ -837,8 +855,8 @@
   "ok   bank bspb",
   "ok   cbr key rate",
   "ok   bank rshb",
+  "FAIL bank uralsib: https://www.uralsib.ru/vklady-scheta/vklady: fetch failed",
   "FAIL bank akbars: https://www.akbars.ru/individuals/deposits/: UND_ERR_CONNECT_TIMEOUT",
-  "FAIL bill 617-9: https://sozd.duma.gov.ru/bill/617-9: UND_ERR_CONNECT_TIMEOUT",
-  "FAIL bank uralsib: https://www.uralsib.ru/vklady-scheta/vklady: fetch failed"
+  "FAIL bill 617-9: https://sozd.duma.gov.ru/bill/617-9: UND_ERR_CONNECT_TIMEOUT"
  ]
 }

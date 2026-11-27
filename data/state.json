@@ -4,7 +4,10 @@
   "https://www.banki.ru/news/lenta/?id=11029257",
   "https://www.cbr.ru/press/PR/?file=639300094094201108BANK_SECTOR.htm",
   "https://www.cbr.ru/press/PR/?file=639292378686973469BANK_SECTOR.htm",
-  "https://www.cbr.ru/press/PR/?file=639287925395179124FINSTAB.htm"
+  "https://www.cbr.ru/press/PR/?file=639287925395179124FINSTAB.htm",
+  "https://ria.ru/20261127/sovfed-2134362096.html",
+  "https://www.cbr.ru/press/PR/?file=639313833655037811BANK_SECTOR.htm",
+  "https://tass.ru/ekonomika/28362229"
  ],
  "bankFails": {
   "vtb": 0,
@@ -13,8 +16,8 @@
   "rshb": 0,
   "domrf": 0,
   "bspb": 0,
-  "akbars": 3,
-  "uralsib": 3
+  "akbars": 4,
+  "uralsib": 4
  },
  "bill": "22:2026-11-24:Госдума: третье чтение",
  "key": 14

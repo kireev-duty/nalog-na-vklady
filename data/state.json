@@ -14,10 +14,10 @@
   "gpb": 0,
   "tbank": 0,
   "rshb": 0,
-  "domrf": 0,
+  "domrf": 1,
   "bspb": 0,
-  "akbars": 4,
-  "uralsib": 4
+  "akbars": 5,
+  "uralsib": 5
  },
  "bill": "22:2026-11-24:Госдума: третье чтение",
  "key": 14
